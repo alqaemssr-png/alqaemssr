@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alqaem Auto P2P</title>
+  <meta name="theme-color" content="#1a73e8">
+  <title>ALQAEM</title>
+  <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     body { font-family: sans-serif; padding: 15px; max-width: 480px; margin: auto; background: #f0f2f5; }
@@ -12,6 +14,7 @@
     input { border: 1px solid #ccc; }
     button { background: #1a73e8; color: #fff; border: none; font-weight: bold; cursor: pointer; }
     button.sec { background: #34a853; }
+    button.inst { background: #ff6d00; display: none; }
     #chat { height: 180px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 8px; }
     .msg-me { text-align: left; color: #1a73e8; margin: 4px 0; }
     .msg-them { text-align: right; color: #111; margin: 4px 0; }
@@ -20,8 +23,9 @@
 <body>
 
   <div class="box" style="text-align:center;">
-    <h3 style="margin:0 0 6px 0;">Alqaem Auto P2P</h3>
+    <h3 style="margin:0 0 6px 0;">ALQAEM</h3>
     <div id="status" style="font-weight:bold; color:#d93025;">رابطہ ہو رہا ہے...</div>
+    <button id="installBtn" class="inst">📲 موبائل میں ALQAEM ایپ انسٹال کریں</button>
   </div>
 
   <div class="box">
@@ -44,13 +48,32 @@
   </div>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+    });
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      }
+    });
+
     let peer, conn;
     const statusEl = document.getElementById('status');
     const chatEl = document.getElementById('chat');
     const myIdInput = document.getElementById('myIdInput');
     const targetIdInput = document.getElementById('targetIdInput');
 
-    // محفوظ شدہ نام لوڈ کریں
     myIdInput.value = localStorage.getItem('alqaem_my_id') || '';
     targetIdInput.value = localStorage.getItem('alqaem_target_id') || '';
 
@@ -133,7 +156,6 @@
       }
     }
 
-    // ہر 5 سیکنڈ بعد خودکار کنکشن چیک
     setInterval(autoConnect, 5000);
     initPeer();
   </script>
