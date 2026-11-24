@@ -3,88 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alqaem P2P App</title>
+  <title>Alqaem Auto P2P</title>
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 15px; max-width: 480px; margin: auto; background: #f4f6f8; }
-    .box { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-    button { width: 100%; padding: 10px; margin: 5px 0; background: #1a73e8; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+    body { font-family: sans-serif; padding: 15px; max-width: 480px; margin: auto; background: #f0f2f5; }
+    .box { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    input, button { width: 100%; box-sizing: border-box; padding: 11px; margin: 6px 0; border-radius: 8px; font-size: 15px; }
+    input { border: 1px solid #ccc; }
+    button { background: #1a73e8; color: #fff; border: none; font-weight: bold; cursor: pointer; }
     button.sec { background: #34a853; }
-    textarea, input { width: 100%; box-sizing: border-box; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 6px; }
-    #chat { height: 140px; overflow-y: auto; border: 1px solid #ddd; padding: 8px; background: #fafafa; border-radius: 6px; margin-bottom: 8px; }
+    #chat { height: 180px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 8px; }
+    .msg-me { text-align: left; color: #1a73e8; margin: 4px 0; }
+    .msg-them { text-align: right; color: #111; margin: 4px 0; }
   </style>
 </head>
 <body>
+
   <div class="box" style="text-align:center;">
-    <h3>Alqaem P2P App</h3>
-    <small id="netStatus">چیک ہو رہا ہے...</small> | <small id="p2pStatus">رابطہ منقطع</small>
+    <h3 style="margin:0 0 6px 0;">Alqaem Auto P2P</h3>
+    <div id="status" style="font-weight:bold; color:#d93025;">رابطہ ہو رہا ہے...</div>
   </div>
 
   <div class="box">
-    <b>مرحلہ 1: کنکشن کوڈ بنائیں یا جوڑیں</b>
-    <button onclick="createOffer()">1. نیا کنکشن کوڈ بنائیں (میزبان)</button>
-    <button class="sec" onclick="acceptOffer()">2. دوسرا کوڈ قبول کریں (مہمان)</button>
-    <textarea id="signalBox" rows="3" placeholder="یہاں کوڈ پیسٹ کریں یا یہاں سے کاپی کریں..."></textarea>
-    <button onclick="finalizeConnection()">3. جوابی کوڈ مکمل کریں (صرف میزبان)</button>
+    <b>1. اس موبائل کا مستقل نام (صرف ایک بار سیٹ کریں)</b>
+    <input type="text" id="myIdInput" placeholder="مثلاً: alqaem-office">
+    <button onclick="saveMyId()">میرا نام محفوظ کریں</button>
   </div>
 
   <div class="box">
-    <b>مرحلہ 2: براہِ راست پیغام (P2P Chat)</b>
+    <b>2. دوسرے موبائل کا مستقل نام (خودکار جڑنے کے لیے)</b>
+    <input type="text" id="targetIdInput" placeholder="مثلاً: alqaem-director">
+    <button class="sec" onclick="saveAndConnect()">محفوظ کریں اور ابھی جڑیں</button>
+  </div>
+
+  <div class="box">
+    <b>3. براہِ راست پیغامات (P2P Chat)</b>
     <div id="chat"></div>
     <input type="text" id="msgInput" placeholder="پیغام لکھیں...">
-    <button onclick="sendMsg()">بھیجیں</button>
+    <button onclick="sendMsg()">پیغام بھیجیں</button>
   </div>
 
   <script>
-    const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-    let channel;
-    const signalBox = document.getElementById('signalBox');
-    const chat = document.getElementById('chat');
-    const p2pStatus = document.getElementById('p2pStatus');
+    let peer, conn;
+    const statusEl = document.getElementById('status');
+    const chatEl = document.getElementById('chat');
+    const myIdInput = document.getElementById('myIdInput');
+    const targetIdInput = document.getElementById('targetIdInput');
 
-    function updateNet() {
-      document.getElementById('netStatus').innerText = navigator.onLine ? "آن لائن موڈ" : "مقامی وائی فائی موڈ";
+    // محفوظ شدہ نام لوڈ کریں
+    myIdInput.value = localStorage.getItem('alqaem_my_id') || '';
+    targetIdInput.value = localStorage.getItem('alqaem_target_id') || '';
+
+    function initPeer() {
+      const myId = localStorage.getItem('alqaem_my_id');
+      if (!myId) {
+        statusEl.innerText = "پہلے اس موبائل کا نام محفوظ کریں";
+        return;
+      }
+      if (peer) peer.destroy();
+      peer = new Peer(myId);
+
+      peer.on('open', () => {
+        statusEl.innerText = "آن لائن تیار (" + myId + ")";
+        statusEl.style.color = "#e37400";
+        autoConnect();
+      });
+
+      peer.on('connection', (c) => {
+        setupConn(c);
+      });
+
+      peer.on('error', (err) => {
+        if (err.type === 'unavailable-id') {
+          statusEl.innerText = "یہ نام پہلے سے کسی اور کے پاس ہے، تھوڑا تبدیل کریں";
+        } else {
+          setTimeout(autoConnect, 4000);
+        }
+      });
     }
-    window.addEventListener('online', updateNet);
-    window.addEventListener('offline', updateNet);
-    updateNet();
 
-    function setupChannel(ch) {
-      channel = ch;
-      channel.onopen = () => { p2pStatus.innerText = "P2P جڑ گیا!"; p2pStatus.style.color = "green"; };
-      channel.onmessage = e => { chat.innerHTML += `<div><b>دوسرا:</b> ${e.data}</div>`; };
+    function setupConn(c) {
+      conn = c;
+      conn.on('open', () => {
+        statusEl.innerText = "P2P مستقل جڑ گیا! (" + conn.peer + ")";
+        statusEl.style.color = "#188038";
+      });
+      conn.on('data', (data) => {
+        chatEl.innerHTML += `<div class="msg-them"><b>دوسرا:</b> ${data}</div>`;
+        chatEl.scrollTop = chatEl.scrollHeight;
+      });
+      conn.on('close', () => {
+        statusEl.innerText = "رابطہ ٹوٹ گیا، دوبارہ کوشش جاری ہے...";
+        statusEl.style.color = "#d93025";
+        setTimeout(autoConnect, 3000);
+      });
     }
 
-    pc.ondatachannel = e => setupChannel(e.channel);
-    pc.onicecandidate = e => { if (!e.candidate) signalBox.value = JSON.stringify(pc.localDescription); };
-
-    async function createOffer() {
-      setupChannel(pc.createDataChannel("chat"));
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      signalBox.value = "کوڈ تیار ہو رہا ہے...";
+    function autoConnect() {
+      const targetId = localStorage.getItem('alqaem_target_id');
+      if (peer && peer.open && targetId && (!conn || !conn.open)) {
+        const c = peer.connect(targetId);
+        setupConn(c);
+      }
     }
 
-    async function acceptOffer() {
-      const offer = JSON.parse(signalBox.value);
-      await pc.setRemoteDescription(offer);
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      signalBox.value = "جوابی کوڈ تیار ہو رہا ہے...";
+    function saveMyId() {
+      const val = myIdInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+      if (!val) return;
+      localStorage.setItem('alqaem_my_id', val);
+      myIdInput.value = val;
+      initPeer();
     }
 
-    async function finalizeConnection() {
-      const answer = JSON.parse(signalBox.value);
-      await pc.setRemoteDescription(answer);
+    function saveAndConnect() {
+      const val = targetIdInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+      if (!val) return;
+      localStorage.setItem('alqaem_target_id', val);
+      targetIdInput.value = val;
+      autoConnect();
     }
 
     function sendMsg() {
       const inp = document.getElementById('msgInput');
-      if (channel && channel.readyState === "open" && inp.value) {
-        channel.send(inp.value);
-        chat.innerHTML += `<div><b>آپ:</b> ${inp.value}</div>`;
+      if (conn && conn.open && inp.value.trim()) {
+        conn.send(inp.value);
+        chatEl.innerHTML += `<div class="msg-me"><b>آپ:</b> ${inp.value}</div>`;
+        chatEl.scrollTop = chatEl.scrollHeight;
         inp.value = "";
       }
     }
+
+    // ہر 5 سیکنڈ بعد خودکار کنکشن چیک
+    setInterval(autoConnect, 5000);
+    initPeer();
   </script>
 </body>
 </html>
