@@ -4,20 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alqaem P2P App</title>
+  <style>
+    body { font-family: sans-serif; padding: 15px; max-width: 480px; margin: auto; background: #f4f6f8; }
+    .box { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+    button { width: 100%; padding: 10px; margin: 5px 0; background: #1a73e8; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+    button.sec { background: #34a853; }
+    textarea, input { width: 100%; box-sizing: border-box; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 6px; }
+    #chat { height: 140px; overflow-y: auto; border: 1px solid #ddd; padding: 8px; background: #fafafa; border-radius: 6px; margin-bottom: 8px; }
+  </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; padding: 30px;">
-  <h2>Alqaem P2P App</h2>
-  <p id="status">انٹرنیٹ چیک ہو رہا ہے...</p>
+<body>
+  <div class="box" style="text-align:center;">
+    <h3>Alqaem P2P App</h3>
+    <small id="netStatus">چیک ہو رہا ہے...</small> | <small id="p2pStatus">رابطہ منقطع</small>
+  </div>
+
+  <div class="box">
+    <b>مرحلہ 1: کنکشن کوڈ بنائیں یا جوڑیں</b>
+    <button onclick="createOffer()">1. نیا کنکشن کوڈ بنائیں (میزبان)</button>
+    <button class="sec" onclick="acceptOffer()">2. دوسرا کوڈ قبول کریں (مہمان)</button>
+    <textarea id="signalBox" rows="3" placeholder="یہاں کوڈ پیسٹ کریں یا یہاں سے کاپی کریں..."></textarea>
+    <button onclick="finalizeConnection()">3. جوابی کوڈ مکمل کریں (صرف میزبان)</button>
+  </div>
+
+  <div class="box">
+    <b>مرحلہ 2: براہِ راست پیغام (P2P Chat)</b>
+    <div id="chat"></div>
+    <input type="text" id="msgInput" placeholder="پیغام لکھیں...">
+    <button onclick="sendMsg()">بھیجیں</button>
+  </div>
+
   <script>
-    const status = document.getElementById('status');
-    function updateMode() {
-      status.innerText = navigator.onLine 
-        ? "آن لائن موڈ فعال (WebRTC تیار)" 
-        : "آف لائن موڈ فعال (مقامی رابطہ تیار)";
+    const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+    let channel;
+    const signalBox = document.getElementById('signalBox');
+    const chat = document.getElementById('chat');
+    const p2pStatus = document.getElementById('p2pStatus');
+
+    function updateNet() {
+      document.getElementById('netStatus').innerText = navigator.onLine ? "آن لائن موڈ" : "مقامی وائی فائی موڈ";
     }
-    window.addEventListener('online', updateMode);
-    window.addEventListener('offline', updateMode);
-    updateMode();
+    window.addEventListener('online', updateNet);
+    window.addEventListener('offline', updateNet);
+    updateNet();
+
+    function setupChannel(ch) {
+      channel = ch;
+      channel.onopen = () => { p2pStatus.innerText = "P2P جڑ گیا!"; p2pStatus.style.color = "green"; };
+      channel.onmessage = e => { chat.innerHTML += `<div><b>دوسرا:</b> ${e.data}</div>`; };
+    }
+
+    pc.ondatachannel = e => setupChannel(e.channel);
+    pc.onicecandidate = e => { if (!e.candidate) signalBox.value = JSON.stringify(pc.localDescription); };
+
+    async function createOffer() {
+      setupChannel(pc.createDataChannel("chat"));
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      signalBox.value = "کوڈ تیار ہو رہا ہے...";
+    }
+
+    async function acceptOffer() {
+      const offer = JSON.parse(signalBox.value);
+      await pc.setRemoteDescription(offer);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      signalBox.value = "جوابی کوڈ تیار ہو رہا ہے...";
+    }
+
+    async function finalizeConnection() {
+      const answer = JSON.parse(signalBox.value);
+      await pc.setRemoteDescription(answer);
+    }
+
+    function sendMsg() {
+      const inp = document.getElementById('msgInput');
+      if (channel && channel.readyState === "open" && inp.value) {
+        channel.send(inp.value);
+        chat.innerHTML += `<div><b>آپ:</b> ${inp.value}</div>`;
+        inp.value = "";
+      }
+    }
   </script>
 </body>
 </html>
