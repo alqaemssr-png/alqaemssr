@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alqaem P2P App</title>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding: 30px;">
+  <h2>Alqaem P2P App</h2>
+  <p id="status">انٹرنیٹ چیک ہو رہا ہے...</p>
+  <script>
+    const status = document.getElementById('status');
+    function updateMode() {
+      status.innerText = navigator.onLine 
+        ? "آن لائن موڈ فعال (WebRTC تیار)" 
+        : "آف لائن موڈ فعال (مقامی رابطہ تیار)";
+    }
+    window.addEventListener('online', updateMode);
+    window.addEventListener('offline', updateMode);
+    updateMode();
+  </script>
+</body>
+</html>
