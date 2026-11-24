@@ -8,43 +8,29 @@
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 15px; max-width: 480px; margin: auto; background: #f0f2f5; }
-    .box { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-    input, button { width: 100%; box-sizing: border-box; padding: 11px; margin: 6px 0; border-radius: 8px; font-size: 15px; }
+    body { font-family: sans-serif; padding: 12px; max-width: 500px; margin: auto; background: #f0f2f5; }
+    .box { background: #fff; padding: 14px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    input, button { width: 100%; box-sizing: border-box; padding: 12px; margin: 5px 0; border-radius: 8px; font-size: 16px; }
     input { border: 1px solid #ccc; }
     button { background: #1a73e8; color: #fff; border: none; font-weight: bold; cursor: pointer; }
-    button.sec { background: #34a853; }
     button.inst { background: #ff6d00; display: none; }
-    #chat { height: 180px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 8px; }
-    .msg-me { text-align: left; color: #1a73e8; margin: 4px 0; }
-    .msg-them { text-align: right; color: #111; margin: 4px 0; }
+    #chat { height: 55vh; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 8px; }
+    .msg-me { background: #e8f0fe; color: #174ea6; padding: 8px 12px; border-radius: 10px; margin: 6px 0; text-align: left; }
+    .msg-them { background: #fff; border: 1px solid #ddd; color: #111; padding: 8px 12px; border-radius: 10px; margin: 6px 0; text-align: right; }
   </style>
 </head>
 <body>
 
   <div class="box" style="text-align:center;">
-    <h3 style="margin:0 0 6px 0;">ALQAEM</h3>
-    <div id="status" style="font-weight:bold; color:#d93025;">رابطہ ہو رہا ہے...</div>
-    <button id="installBtn" class="inst">📲 موبائل میں ALQAEM ایپ انسٹال کریں</button>
+    <h3 style="margin:0 0 4px 0;">ALQAEM</h3>
+    <div id="status" style="font-weight:bold; color:#e37400;">نیٹ ورک سے جڑ رہا ہے...</div>
+    <button id="installBtn" class="inst">📲 موبائل میں ALQAEM انسٹال کریں</button>
   </div>
 
   <div class="box">
-    <b>1. اس موبائل کا مستقل نام (صرف ایک بار سیٹ کریں)</b>
-    <input type="text" id="myIdInput" placeholder="مثلاً: alqaem-office">
-    <button onclick="saveMyId()">میرا نام محفوظ کریں</button>
-  </div>
-
-  <div class="box">
-    <b>2. دوسرے موبائل کا مستقل نام (خودکار جڑنے کے لیے)</b>
-    <input type="text" id="targetIdInput" placeholder="مثلاً: alqaem-director">
-    <button class="sec" onclick="saveAndConnect()">محفوظ کریں اور ابھی جڑیں</button>
-  </div>
-
-  <div class="box">
-    <b>3. براہِ راست پیغامات (P2P Chat)</b>
     <div id="chat"></div>
-    <input type="text" id="msgInput" placeholder="پیغام لکھیں...">
-    <button onclick="sendMsg()">پیغام بھیجیں</button>
+    <input type="text" id="msgInput" placeholder="پیغام لکھیں..." onkeypress="if(event.key==='Enter') sendMsg()">
+    <button onclick="sendMsg()">بھیجیں</button>
   </div>
 
   <script>
@@ -68,96 +54,139 @@
       }
     });
 
-    let peer, conn;
+    // ALQAEM مشترکہ نیٹ ورک کی مستقل ID
+    const HUB_ID = 'alqaem-rattowal-global-hub-v1';
+    let peer = null;
+    let isHub = false;
+    let connections = [];
+    const seenMsgs = new Set();
+
     const statusEl = document.getElementById('status');
     const chatEl = document.getElementById('chat');
-    const myIdInput = document.getElementById('myIdInput');
-    const targetIdInput = document.getElementById('targetIdInput');
 
-    myIdInput.value = localStorage.getItem('alqaem_my_id') || '';
-    targetIdInput.value = localStorage.getItem('alqaem_target_id') || '';
-
-    function initPeer() {
-      const myId = localStorage.getItem('alqaem_my_id');
-      if (!myId) {
-        statusEl.innerText = "پہلے اس موبائل کا نام محفوظ کریں";
-        return;
+    function updateStatus() {
+      const count = connections.filter(c => c && c.open).length;
+      if (isHub) {
+        statusEl.innerText = count > 0
+          ? `مرکزی نوڈ فعال | ${count} موبائل جڑے ہوئے ہیں`
+          : `تیار ہے (باقی موبائلز کا انتظار...)`;
+        statusEl.style.color = count > 0 ? "#188038" : "#e37400";
+      } else {
+        statusEl.innerText = count > 0
+          ? `ALQAEM نیٹ ورک سے جڑ گیا!`
+          : `مرکز سے رابطہ ہو رہا ہے...`;
+        statusEl.style.color = count > 0 ? "#188038" : "#d93025";
       }
+    }
+
+    function startNetwork() {
       if (peer) peer.destroy();
-      peer = new Peer(myId);
+      connections = [];
+      isHub = false;
+
+      // پہلے مرکزی نوڈ بننے کی کوشش کریں
+      peer = new Peer(HUB_ID);
 
       peer.on('open', () => {
-        statusEl.innerText = "آن لائن تیار (" + myId + ")";
-        statusEl.style.color = "#e37400";
-        autoConnect();
+        isHub = true;
+        updateStatus();
       });
 
-      peer.on('connection', (c) => {
-        setupConn(c);
+      peer.on('connection', (conn) => {
+        registerConn(conn);
       });
 
       peer.on('error', (err) => {
         if (err.type === 'unavailable-id') {
-          statusEl.innerText = "یہ نام پہلے سے کسی اور کے پاس ہے، تھوڑا تبدیل کریں";
+          // مرکز پہلے سے موجود ہے، بطور ممبر جڑیں
+          joinAsMember();
         } else {
-          setTimeout(autoConnect, 4000);
+          setTimeout(startNetwork, 3000);
         }
       });
     }
 
-    function setupConn(c) {
-      conn = c;
+    function joinAsMember() {
+      if (peer) peer.destroy();
+      isHub = false;
+      peer = new Peer(); // خودکار منفرد ID
+
+      peer.on('open', () => {
+        const conn = peer.connect(HUB_ID, { reliable: true });
+        registerConn(conn);
+      });
+
+      peer.on('error', () => {
+        setTimeout(startNetwork, 3000);
+      });
+    }
+
+    function registerConn(conn) {
       conn.on('open', () => {
-        statusEl.innerText = "P2P مستقل جڑ گیا! (" + conn.peer + ")";
-        statusEl.style.color = "#188038";
+        if (!connections.includes(conn)) connections.push(conn);
+        updateStatus();
       });
-      conn.on('data', (data) => {
-        chatEl.innerHTML += `<div class="msg-them"><b>دوسرا:</b> ${data}</div>`;
-        chatEl.scrollTop = chatEl.scrollHeight;
+
+      conn.on('data', (packet) => {
+        if (!packet || !packet.id || seenMsgs.has(packet.id)) return;
+        seenMsgs.add(packet.id);
+
+        appendMsg(packet.text, false);
+
+        // اگر یہ مرکزی نوڈ ہے تو پیغام باقی تمام جڑے ہوئے موبائلز کو بھیج دے
+        if (isHub) {
+          broadcast(packet, conn);
+        }
       });
+
       conn.on('close', () => {
-        statusEl.innerText = "رابطہ ٹوٹ گیا، دوبارہ کوشش جاری ہے...";
-        statusEl.style.color = "#d93025";
-        setTimeout(autoConnect, 3000);
+        connections = connections.filter(c => c !== conn);
+        updateStatus();
+        // اگر ممبر تھا اور مرکز بند ہو گیا تو خود نیا مرکز بننے کی کوشش کرے
+        if (!isHub) {
+          setTimeout(startNetwork, 1500);
+        }
       });
     }
 
-    function autoConnect() {
-      const targetId = localStorage.getItem('alqaem_target_id');
-      if (peer && peer.open && targetId && (!conn || !conn.open)) {
-        const c = peer.connect(targetId);
-        setupConn(c);
-      }
+    function broadcast(packet, excludeConn = null) {
+      connections.forEach(c => {
+        if (c && c.open && c !== excludeConn) {
+          c.send(packet);
+        }
+      });
     }
 
-    function saveMyId() {
-      const val = myIdInput.value.trim().toLowerCase().replace(/\s+/g, '-');
-      if (!val) return;
-      localStorage.setItem('alqaem_my_id', val);
-      myIdInput.value = val;
-      initPeer();
-    }
-
-    function saveAndConnect() {
-      const val = targetIdInput.value.trim().toLowerCase().replace(/\s+/g, '-');
-      if (!val) return;
-      localStorage.setItem('alqaem_target_id', val);
-      targetIdInput.value = val;
-      autoConnect();
+    function appendMsg(text, isMe) {
+      const div = document.createElement('div');
+      div.className = isMe ? 'msg-me' : 'msg-them';
+      div.innerText = text;
+      chatEl.appendChild(div);
+      chatEl.scrollTop = chatEl.scrollHeight;
     }
 
     function sendMsg() {
       const inp = document.getElementById('msgInput');
-      if (conn && conn.open && inp.value.trim()) {
-        conn.send(inp.value);
-        chatEl.innerHTML += `<div class="msg-me"><b>آپ:</b> ${inp.value}</div>`;
-        chatEl.scrollTop = chatEl.scrollHeight;
-        inp.value = "";
+      const text = inp.value.trim();
+      if (!text) return;
+
+      const openConns = connections.filter(c => c && c.open);
+      if (openConns.length === 0) {
+        alert("ابھی کوئی دوسرا موبائل آن لائن نہیں جڑا۔");
+        return;
       }
+
+      const packet = {
+        id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+        text: text
+      };
+      seenMsgs.add(packet.id);
+      appendMsg(text, true);
+      broadcast(packet);
+      inp.value = "";
     }
 
-    setInterval(autoConnect, 5000);
-    initPeer();
+    startNetwork();
   </script>
 </body>
 </html>
