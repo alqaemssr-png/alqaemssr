@@ -1,4 +1,4 @@
-const CACHE_NAME = 'alqaem-p2p-v6';
+const CACHE_NAME = 'alqaem-p2p-v8-unlimited';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
