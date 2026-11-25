@@ -21,7 +21,6 @@
       border-right: 1px solid #ccc;
     }
 
-    /* ہیڈر بار + کال بٹن */
     header {
       background: #1a73e8;
       color: #fff;
@@ -73,7 +72,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* کال اوورلے بینر */
     #callBanner {
       display: none;
       background: #134e4a;
@@ -281,7 +279,6 @@
     }
     .toggle-row input[type="checkbox"] { width: 22px; height: 22px; margin: 0; }
 
-    /* Type بار + اٹیچ + وائس ریکارڈنگ */
     .type-bar {
       background: #f0f2f5;
       padding: 7px 8px;
@@ -360,7 +357,6 @@
 </head>
 <body>
 
-  <!-- ہیڈر بار: تصویر + نام + کال بٹن -->
   <header>
     <div class="avatar" id="avatarLetter">A</div>
     <div class="header-info">
@@ -373,7 +369,6 @@
     <button class="call-header-btn" onclick="startVoiceCall()" title="آڈیو کال ملائیں">📞</button>
   </header>
 
-  <!-- لائیو آڈیو کال بینر -->
   <div id="callBanner">
     <span id="callStatusText">📞 کال جاری ہے...</span>
     <div style="display:flex; gap:6px;">
@@ -381,15 +376,13 @@
       <button class="call-ctrl-btn" style="background:#d93025;" onclick="endVoiceCall()">کاٹیں</button>
     </div>
   </div>
-  <audio id="remoteAudio" autoplay></audio>
+  <audio id="remoteAudio" autoplay playsinline></audio>
 
   <main>
-    <!-- ٹیب 1: میسجز -->
     <section id="tab-chat" class="tab-page active">
       <div id="chatList"></div>
     </section>
 
-    <!-- ٹیب 2: ہوم پیج (نیٹ ورک + فائل اسٹوریج اور ڈاؤن لوڈ) -->
     <section id="tab-home" class="tab-page">
       <div class="card">
         <h4>ALQAEM ملٹی-سرور سنک (Replication)</h4>
@@ -417,7 +410,6 @@
       </div>
     </section>
 
-    <!-- ٹیب 3: سیٹنگز -->
     <section id="tab-settings" class="tab-page">
       <div class="card">
         <h4>ایپ کنٹرول (App Control)</h4>
@@ -456,7 +448,6 @@
       </div>
     </section>
 
-    <!-- ٹیب 4: پروفائل -->
     <section id="tab-profile" class="tab-page">
       <div class="card">
         <h4>میرا نام (Profile Name)</h4>
@@ -467,7 +458,6 @@
     </section>
   </main>
 
-  <!-- چیٹ بار: اٹیچ فائل + Type + وائس ریکارڈنگ + سینڈ -->
   <div class="type-bar" id="typeBar">
     <input type="file" id="chatFilePicker" style="display:none;" onchange="handleFileSelect(this, true)">
     <button class="icon-circle-btn" onclick="document.getElementById('chatFilePicker').click()" title="فائل اٹیچ کریں">📎</button>
@@ -476,7 +466,6 @@
     <button class="send-btn" onclick="sendTextMsg()">➤</button>
   </div>
 
-  <!-- فوٹر: 4 آئیکنز -->
   <footer>
     <button class="nav-btn active" onclick="switchTab('chat', this)" title="Messages">
       <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
@@ -527,7 +516,6 @@
       window.location.href = window.location.pathname + '?v=' + Date.now();
     }
 
-    // بنیادی سیٹنگز
     let myName = localStorage.getItem('alqaem_profile_name') || 'ALQAEM';
     let isServerMode = localStorage.getItem('alqaem_is_server') === 'true';
     let myServerSlot = localStorage.getItem('alqaem_server_slot') || '1';
@@ -576,11 +564,11 @@
     }
 
     // ==========================================
-    // 1. IndexedDB یونیفائیڈ اسٹوریج (Deduplication)
+    // 1. IndexedDB یونیفائیڈ اسٹوریج
     // ==========================================
     let db = null;
-    const itemMap = new Map(); // id -> itemObj (ایک ہی کاپی کی ضمانت)
-    const ackMap = new Map();  // id -> Set of serverIds جنہوں نے تصدیق کر دی ہے
+    const itemMap = new Map();
+    const ackMap = new Map();
 
     function initDB() {
       return new Promise((resolve) => {
@@ -611,7 +599,7 @@
       });
     }
 
-    function storeUniqueItem(item, fromServerId = null) {
+    function storeUniqueItem(item, fromPeerId = null) {
       let isNew = false;
       if (!itemMap.has(item.id)) {
         itemMap.set(item.id, item);
@@ -619,8 +607,8 @@
       }
       if (!ackMap.has(item.id)) ackMap.set(item.id, new Set());
       if (isServerMode && peer && peer.id) ackMap.get(item.id).add(peer.id);
-      if (fromServerId && fromServerId.startsWith('alqaem-rattowal-srv-')) {
-        ackMap.get(item.id).add(fromServerId);
+      if (fromPeerId && isHubOrServerId(fromPeerId)) {
+        ackMap.get(item.id).add(fromPeerId);
       }
 
       const stored = itemMap.get(item.id);
@@ -655,8 +643,9 @@
     }
 
     // ==========================================
-    // 2. P2P نیٹ ورک، Quorum ACK (2 سرورز) اور Anti-Entropy Sync
+    // 2. مستحکم Hybrid P2P نیٹ ورک (بغیر کنیکشن ٹوٹے)
     // ==========================================
+    const MASTER_HUB_ID = 'alqaem-rattowal-master-hub-v1';
     const SERVER_IDS = [
       'alqaem-rattowal-srv-1',
       'alqaem-rattowal-srv-2',
@@ -665,94 +654,129 @@
       'alqaem-rattowal-srv-5'
     ];
 
+    function isHubOrServerId(id) {
+      return id === MASTER_HUB_ID || SERVER_IDS.includes(id);
+    }
+
     const PEER_CONFIG = {
       config: {
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' }
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' }
         ]
       }
     };
 
     let peer = null;
-    let connections = new Map();
+    let isMasterHub = false;
+    const connections = new Map();     // peerId -> DataConnection
+    const connectingSince = new Map(); // peerId -> timestamp (تاکہ جڑتے وقت کنیکشن نہ کٹے)
 
-    function getConnectedServers() {
+    function getOpenPeers() {
       return Array.from(connections.entries())
-        .filter(([id, c]) => id.startsWith('alqaem-rattowal-srv-') && c && c.open)
+        .filter(([id, c]) => c && c.open)
         .map(([id]) => id);
     }
 
     function updateStatsUI() {
-      const openConns = Array.from(connections.values()).filter(c => c && c.open).length;
-      const connectedSrvs = getConnectedServers().length + (isServerMode ? 1 : 0);
+      const openPeers = getOpenPeers();
       const statusEl = document.getElementById('status');
       const netDetailEl = document.getElementById('netDetail');
       const vaultStatsEl = document.getElementById('vaultStats');
 
       if (isServerMode) {
-        statusEl.innerText = `سرور #${myServerSlot} فعال | ${openConns} جڑے ہوئے`;
-        netDetailEl.innerText = `یہ موبائل بطور سرور #${myServerSlot} کام کر رہا ہے اور باقی سرورز کے ساتھ ڈیٹا کی مکمل کاپی ہم آہنگ رکھتا ہے۔`;
+        statusEl.innerText = `سرور #${myServerSlot} فعال | ${openPeers.length} موبائل جڑے ہیں`;
+        netDetailEl.innerText = `یہ موبائل بطور سرور #${myServerSlot} فعال ہے اور تمام ڈیٹا محفوظ کر کے باقی موبائلز کو فراہم کر رہا ہے۔`;
+      } else if (isMasterHub) {
+        statusEl.innerText = `مرکزی ہب فعال | ${openPeers.length} موبائل جڑے ہیں`;
+        netDetailEl.innerText = `یہ موبائل مرکزی ہب کے طور پر تمام موبائلز کو آپس میں جوڑ رہا ہے۔`;
       } else {
-        statusEl.innerText = openConns > 0 ? `جڑ گیا (${connectedSrvs} سرورز آن لائن)` : `سرور تلاش کر رہا ہے...`;
-        netDetailEl.innerText = openConns > 0 ? `آپ ALQAEM سرور نیٹ ورک سے جڑے ہوئے ہیں۔` : `آن لائن سرور تلاش کیا جا رہا ہے...`;
+        statusEl.innerText = openPeers.length > 0 ? `آن لائن جڑ گیا (${openPeers.length} ڈیوائسز)` : `نیٹ ورک سے جڑ رہا ہے...`;
+        netDetailEl.innerText = openPeers.length > 0 ? `ALQAEM نیٹ ورک سے رابطہ بحال ہے۔` : `دوسرے موبائلز اور سرورز تلاش کیے جا رہے ہیں...`;
       }
 
       let msgCount = 0, fileCount = 0;
       itemMap.forEach(it => { if (it.kind === 'file') fileCount++; else msgCount++; });
-      vaultStatsEl.innerText = `منفرد محفوظ پیغامات: ${msgCount} | منفرد فائلیں: ${fileCount}`;
+      vaultStatsEl.innerText = `محفوظ پیغامات: ${msgCount} | محفوظ فائلیں: ${fileCount}`;
     }
 
     function startNetwork() {
       if (peer) peer.destroy();
       connections.clear();
+      connectingSince.clear();
+      isMasterHub = false;
 
-      const myPeerId = isServerMode ? `alqaem-rattowal-srv-${myServerSlot}` : undefined;
-      peer = myPeerId ? new Peer(myPeerId, PEER_CONFIG) : new Peer(PEER_CONFIG);
+      if (isServerMode) {
+        // سرور موڈ میں منتخب کردہ سرور نمبر کی ID لیں
+        initPeerInstance(`alqaem-rattowal-srv-${myServerSlot}`, false);
+      } else {
+        // عام موڈ میں پہلے ماسٹر ہب بننے کی کوشش کریں تاکہ اگر کوئی سرور آن نہ بھی ہو تو سب آپس میں جڑ جائیں
+        initPeerInstance(MASTER_HUB_ID, true);
+      }
+    }
+
+    function initPeerInstance(desiredId, tryingHub) {
+      if (peer) peer.destroy();
+      peer = desiredId ? new Peer(desiredId, PEER_CONFIG) : new Peer(PEER_CONFIG);
 
       peer.on('open', () => {
-        if (isServerMode) {
+        isMasterHub = tryingHub;
+        if (isServerMode || isMasterHub) {
           itemMap.forEach((it, id) => {
             if (!ackMap.has(id)) ackMap.set(id, new Set());
             ackMap.get(id).add(peer.id);
           });
         }
         updateStatsUI();
-        connectToAllServers();
+        discoverAndConnect();
       });
 
       peer.on('connection', (conn) => setupConnection(conn));
 
-      peer.on('call', (incomingCall) => {
-        handleIncomingCall(incomingCall);
-      });
+      peer.on('call', (incomingCall) => handleIncomingCall(incomingCall));
 
       peer.on('error', (err) => {
-        if (err.type === 'unavailable-id' && isServerMode) {
-          alert(`سرور نمبر ${myServerSlot} پہلے سے کسی دوسرے موبائل پر فعال ہے۔ سیٹنگز میں کوئی دوسرا سرور نمبر منتخب کریں۔`);
+        if (err.type === 'unavailable-id') {
+          if (tryingHub) {
+            // ماسٹر ہب پہلے से موجود ہے، اب بطور ممبر جڑیں
+            initPeerInstance(undefined, false);
+          } else if (isServerMode) {
+            alert(`سرور نمبر ${myServerSlot} پہلے سے کسی دوسرے موبائل پر فعال ہے۔ سیٹنگز میں جا کر کوئی دوسرا سرور نمبر منتخب کریں۔`);
+          }
+        } else if (err.type === 'peer-unavailable') {
+          // ہدف آف لائن ہے، کوئی مسئلہ نہیں اگلی باری دوبارہ چیک ہوگا
         } else {
           setTimeout(startNetwork, 4000);
         }
       });
     }
 
-    function connectToAllServers() {
+    function discoverAndConnect() {
       if (!peer || !peer.open) return;
-      SERVER_IDS.forEach(srvId => {
-        if (srvId === peer.id) return;
-        const existing = connections.get(srvId);
-        if (!existing || !existing.open) {
-          const conn = peer.connect(srvId, { reliable: true });
-          setupConnection(conn);
-        }
+      const targets = [MASTER_HUB_ID, ...SERVER_IDS];
+      const now = Date.now();
+
+      targets.forEach(targetId => {
+        if (targetId === peer.id) return;
+        const existing = connections.get(targetId);
+        if (existing && existing.open) return;
+
+        // اگر ابھی پچھلے 12 سیکنڈ میں کنیکشن کی کوشش کی گئی ہے تو اسے بیچ میں نہ کاٹیں
+        const startedAt = connectingSince.get(targetId) || 0;
+        if (now - startedAt < 12000) return;
+
+        connectingSince.set(targetId, now);
+        const conn = peer.connect(targetId, { reliable: true });
+        if (conn) setupConnection(conn);
       });
     }
 
     function setupConnection(conn) {
       conn.on('open', () => {
         connections.set(conn.peer, conn);
+        connectingSince.delete(conn.peer);
         updateStatsUI();
-        // جڑتے ہی اپنی انوینٹری (موجود IDs کی فہرست) بھیجیں تاکہ غائب ڈیٹا سنک ہو سکے
         sendInventory(conn);
         retryUnconfirmedItems();
       });
@@ -760,7 +784,6 @@
       conn.on('data', (data) => {
         if (!data || !data.type) return;
 
-        // 1. انوینٹری موازنہ (Anti-Entropy Sync): جو چیز سامنے والے کے پاس نہیں وہ بھیجیں، اور جو ہمارے پاس نہیں وہ مانگیں
         if (data.type === 'INVENTORY' && Array.isArray(data.ids)) {
           const remoteSet = new Set(data.ids);
           const missingLocally = [];
@@ -781,7 +804,6 @@
           return;
         }
 
-        // 2. مانگی گئی مخصوص چیزیں فراہم کریں
         if (data.type === 'REQUEST_ITEMS' && Array.isArray(data.ids)) {
           data.ids.forEach(id => {
             if (itemMap.has(id)) {
@@ -791,12 +813,11 @@
           return;
         }
 
-        // 3. نیا یا سنک شدہ ڈیٹا وصول کریں اور اگر یہ سرور ہے تو فوری تصدیقی رسید (ACK) بھیجیں
         if (data.type === 'ITEM_PUSH' && data.item && data.item.id) {
           const isNew = storeUniqueItem(data.item, conn.peer);
 
-          if (isServerMode) {
-            // بھیجنے والے کو تصدیق (ACK) بھیجیں کہ سرور نے ڈیٹا محفوظ کر لیا ہے
+          // اگر یہ سرور یا ماسٹر ہب ہے تو تصدیق (ACK) بھیجے اور باقی جڑے موبائلز کو آگے منتقل کرے
+          if (isServerMode || isMasterHub) {
             conn.send({ type: 'ITEM_ACK', id: data.item.id, serverId: peer.id });
             if (isNew) {
               broadcast({ type: 'ITEM_PUSH', item: data.item }, conn.peer);
@@ -805,7 +826,6 @@
           return;
         }
 
-        // 4. سرور سے تصدیقی رسید (ACK) موصول ہونا
         if (data.type === 'ITEM_ACK' && data.id && data.serverId) {
           if (!ackMap.has(data.id)) ackMap.set(data.id, new Set());
           ackMap.get(data.id).add(data.serverId);
@@ -823,7 +843,12 @@
 
       conn.on('close', () => {
         connections.delete(conn.peer);
+        connectingSince.delete(conn.peer);
         updateStatsUI();
+        // اگر ماسٹر ہب بند ہو جائے تو عام ممبر خود نیا ماسٹر ہب بننے کی کوشش کرے
+        if (!isServerMode && !isMasterHub && conn.peer === MASTER_HUB_ID) {
+          setTimeout(startNetwork, 2000);
+        }
       });
     }
 
@@ -841,19 +866,16 @@
       });
     }
 
-    // ہر 3.5 سیکنڈ بعد چیک کریں کہ جن پیغامات/فائلوں کو ابھی 2 سرورز سے تصدیق نہیں ملی انہیں دوبارہ بھیجیں
     function retryUnconfirmedItems() {
-      const onlineSrvs = getConnectedServers();
-      if (onlineSrvs.length === 0) return;
+      const openPeers = getOpenPeers();
+      if (openPeers.length === 0) return;
 
       itemMap.forEach((item, id) => {
         const confirmed = ackMap.get(id) || new Set();
-        const targetAcks = Math.min(2, Math.max(1, onlineSrvs.length + (isServerMode ? 1 : 0)));
-
         if (confirmed.size < 2) {
-          onlineSrvs.forEach(srvId => {
-            if (!confirmed.has(srvId)) {
-              const c = connections.get(srvId);
+          openPeers.forEach(pId => {
+            if (!confirmed.has(pId)) {
+              const c = connections.get(pId);
               if (c && c.open) c.send({ type: 'ITEM_PUSH', item: item });
             }
           });
@@ -861,18 +883,17 @@
       });
     }
 
-    // ہر 6 سیکنڈ بعد سرورز آپس میں مکمل ڈیٹا انوینٹری ہم آہنگ (Sync) کریں
     setInterval(() => {
-      connectToAllServers();
+      discoverAndConnect();
       retryUnconfirmedItems();
       connections.forEach((conn) => sendInventory(conn));
-    }, 5000);
+    }, 6000);
 
     // ==========================================
     // 3. پیغامات، فائلیں اور وائس ریکارڈنگ
     // ==========================================
     function publishNewItem(item) {
-      storeUniqueItem(item, isServerMode && peer ? peer.id : null);
+      storeUniqueItem(item, (isServerMode || isMasterHub) && peer ? peer.id : null);
       broadcast({ type: 'ITEM_PUSH', item: item });
       retryUnconfirmedItems();
     }
@@ -924,7 +945,7 @@
         });
         if (statusDiv) {
           statusDiv.style.color = '#188038';
-          statusDiv.innerText = `✅ "${file.name}" قطار میں شامل! 2 سرورز سے تصدیق ہو رہی ہے...`;
+          statusDiv.innerText = `✅ "${file.name}" قطار میں شامل! تصدیق ہو رہی ہے...`;
           setTimeout(() => { statusDiv.innerText = ''; }, 4000);
         }
         input.value = '';
@@ -932,7 +953,6 @@
       reader.readAsDataURL(file);
     }
 
-    // وائس میسج ریکارڈنگ
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
@@ -1046,7 +1066,7 @@
       const count = ackMap.has(id) ? ackMap.get(id).size : 0;
       if (count >= 2) {
         badge.className = 'ack-ok';
-        badge.innerText = `✓✓ (${count} سرورز)`;
+        badge.innerText = `✓✓ (${count})`;
       } else {
         badge.className = 'ack-wait';
         badge.innerText = `⏳ (${count}/2)`;
@@ -1104,31 +1124,40 @@
     // 5. لائیو P2P وائس کال (ہیڈر بٹن سے)
     // ==========================================
     let activeMediaCall = null;
+    let outgoingCalls = [];
     let localCallStream = null;
     let pendingIncomingCall = null;
 
     async function startVoiceCall() {
-      const peers = Array.from(connections.keys());
-      if (peers.length === 0) {
-        alert("ابھی کوئی دوسرا موبائل آن لائن نہیں جڑا۔");
+      const openPeers = getOpenPeers();
+      if (openPeers.length === 0) {
+        alert("ابھی کوئی دوسرا موبائل آن لائن نہیں جڑا۔ اوپر اسٹیٹس میں 'جڑ گیا' آنے کا انتظار کریں۔");
         return;
       }
       try {
         localCallStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         document.getElementById('callBanner').style.display = 'flex';
         document.getElementById('acceptCallBtn').style.display = 'none';
-        document.getElementById('callStatusText').innerText = "📞 کال ملائی جا رہی ہے...";
+        document.getElementById('callStatusText').innerText = `📞 کال ملائی جا رہی ہے (${openPeers.length})...`;
 
-        // پہلے دستیاب آن لائن ڈیوائس کو کال ملائیں
-        const targetPeer = peers[0];
-        const call = peer.call(targetPeer, localCallStream);
-        bindCallEvents(call);
+        outgoingCalls = [];
+        openPeers.forEach(targetPeer => {
+          const call = peer.call(targetPeer, localCallStream);
+          if (call) {
+            outgoingCalls.push(call);
+            bindCallEvents(call);
+          }
+        });
       } catch (e) {
         alert("کال کے لیے مائیکروفون کی اجازت درکار ہے۔");
       }
     }
 
     function handleIncomingCall(call) {
+      if (activeMediaCall) {
+        call.close();
+        return;
+      }
       pendingIncomingCall = call;
       document.getElementById('callBanner').style.display = 'flex';
       document.getElementById('acceptCallBtn').style.display = 'inline-block';
@@ -1150,18 +1179,29 @@
     }
 
     function bindCallEvents(call) {
-      activeMediaCall = call;
       call.on('stream', (remoteStream) => {
+        activeMediaCall = call;
+        // باقی ڈائل کی گئی کالز بند کر دیں
+        outgoingCalls.forEach(c => { if (c !== call) c.close(); });
+        outgoingCalls = [];
+
         document.getElementById('callStatusText').innerText = "📞 کال منسلک ہے (بات کریں)";
         const audioEl = document.getElementById('remoteAudio');
         audioEl.srcObject = remoteStream;
+        audioEl.play().catch(() => {});
       });
-      call.on('close', () => endVoiceCall());
-      call.on('error', () => endVoiceCall());
+      call.on('close', () => {
+        if (activeMediaCall === call) endVoiceCall();
+      });
+      call.on('error', () => {
+        if (activeMediaCall === call) endVoiceCall();
+      });
     }
 
     function endVoiceCall() {
       if (activeMediaCall) { activeMediaCall.close(); activeMediaCall = null; }
+      outgoingCalls.forEach(c => c.close());
+      outgoingCalls = [];
       if (pendingIncomingCall) { pendingIncomingCall.close(); pendingIncomingCall = null; }
       if (localCallStream) { localCallStream.getTracks().forEach(t => t.stop()); localCallStream = null; }
       document.getElementById('callBanner').style.display = 'none';
