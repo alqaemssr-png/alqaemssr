@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#1e1b4b">
+  <meta name="theme-color" content="#070b1e">
   <title>ON NEXA SERVER</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     :root {
-      --indigo-dark: #1e1b4b;
-      --indigo-mid: #312e81;
+      --indigo-dark: #0f172a;
+      --indigo-mid: #1e1b4b;
       --purple-accent: #4f46e5;
       --cyan-bright: #22d3ee;
       --cyan-deep: #0891b2;
-      --bg-page: #f1f5f9;
+      --bg-page: #eef2f6;
       --card-bg: #ffffff;
       --text-main: #0f172a;
       --text-sub: #475569;
-      --border-soft: #e2e8f0;
+      --border-soft: #cbd5e1;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
       background: var(--bg-page);
       color: var(--text-main);
       height: 100dvh;
@@ -37,107 +37,528 @@
       border-right: 1px solid #cbd5e1;
     }
 
+    /* ==================== 3-SECOND SPLASH SCREEN (#18 DOUBLE SONAR RADAR) ==================== */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #070b1e;
+      background-image:
+        radial-gradient(circle at 50% 44%, rgba(56, 189, 248, 0.2) 0%, rgba(139, 92, 246, 0.1) 42%, rgba(6, 9, 24, 0.98) 85%),
+        linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 28px 28px, 28px 28px;
+      overflow: hidden;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #splash-screen::before,
+    #splash-screen::after {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 2px solid #38bdf8;
+      animation: sonarRadar18 2.2s ease-out infinite;
+    }
+    #splash-screen::after {
+      animation-delay: 1.1s;
+      border-color: #a855f7;
+    }
+    @keyframes sonarRadar18 {
+      0% { transform: scale(0.6); opacity: 0.95; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+    .splash-lockup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      user-select: none;
+    }
+    .splash-svg {
+      width: 165px;
+      height: 165px;
+      overflow: visible;
+      filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.55));
+    }
+    .splash-title {
+      margin-top: 14px;
+      font-size: 2.05rem;
+      font-weight: 900;
+      letter-spacing: 5px;
+      background: linear-gradient(180deg, #ffffff 10%, #bae6fd 55%, #7dd3fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .splash-sub {
+      margin-top: 4px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 9px;
+      color: #22d3ee;
+      text-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+    }
+
+    /* ==================== FIXED HEADER ==================== */
     header {
       flex-shrink: 0;
-      background: linear-gradient(135deg, var(--indigo-dark) 0%, var(--indigo-mid) 65%, #3730a3 100%);
+      background: linear-gradient(135deg, #070b1e 0%, #1e1b4b 60%, #312e81 100%);
       color: #fff;
-      padding: 12px 16px;
+      padding: 13px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 3px 12px rgba(30, 27, 75, 0.25);
+      box-shadow: 0 4px 14px rgba(7, 11, 30, 0.3);
       z-index: 20;
     }
     .brand-wrap { display: flex; align-items: center; gap: 11px; }
-    .nexa-logo { width: 38px; height: 38px; flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(34, 211, 238, 0.35)); }
+    .header-logo { width: 40px; height: 40px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(34, 211, 238, 0.45)); }
     .brand-titles { display: flex; flex-direction: column; }
-    .brand-name { font-size: 16px; font-weight: 800; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px; }
-    .brand-sub { font-size: 10px; letter-spacing: 1.4px; color: var(--cyan-bright); font-weight: 600; margin-top: 1px; }
-    .admin-pill-badge { background: rgba(34, 211, 238, 0.2); border: 1px solid var(--cyan-bright); color: var(--cyan-bright); font-size: 9px; padding: 1px 6px; border-radius: 10px; display: none; }
-    .header-live-dot { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.12); padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .brand-name { font-size: 16px; font-weight: 900; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px; }
+    .brand-sub { font-size: 10px; letter-spacing: 1.6px; color: var(--cyan-bright); font-weight: 700; margin-top: 1px; }
+    .admin-pill-badge {
+      background: rgba(34, 211, 238, 0.2);
+      border: 1px solid var(--cyan-bright);
+      color: var(--cyan-bright);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: none;
+      font-weight: 800;
+    }
+    .header-live-dot {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
     .dot { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; }
-    .dot.active { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
-    .dot.inactive { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
-    .dot.disconnected { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    .dot.active { background: #22c55e; box-shadow: 0 0 9px #22c55e; }
+    .dot.inactive { background: #f59e0b; box-shadow: 0 0 9px #f59e0b; }
+    .dot.disconnected { background: #ef4444; box-shadow: 0 0 9px #ef4444; }
 
-    main { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
-    .page-view { display: none; flex-direction: column; gap: 12px; padding-bottom: 10px; }
+    /* ==================== MAIN SCROLLABLE AREA ==================== */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .page-view { display: none; flex-direction: column; gap: 14px; padding-bottom: 14px; }
     .page-view.active { display: flex; }
 
-    .card { background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05); border: 1px solid var(--border-soft); direction: rtl; }
-    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
-    .card-title { font-size: 15px; font-weight: 700; color: var(--indigo-dark); display: flex; align-items: center; gap: 7px; }
+    /* ==================== CLEAR & HIGH-CONTRAST CARDS ==================== */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+      border: 1px solid #cbd5e1;
+      direction: ltr;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--indigo-mid);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
 
-    .server-hero { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #cbd5e1; border-top: 4px solid var(--purple-accent); }
-    .server-name-display { font-size: 19px; font-weight: 800; color: var(--indigo-dark); }
-    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; }
-    .st-active { background: #dcfce7; color: #15803d; }
-    .st-inactive { background: #fef3c7; color: #b45309; }
-    .st-disconnected { background: #fee2e2; color: #b91c1c; }
+    /* Hero Server Card */
+    .server-hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-left: 5px solid var(--purple-accent);
+    }
+    .server-name-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .server-name-display {
+      font-size: 21px;
+      font-weight: 900;
+      color: var(--indigo-dark);
+    }
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .st-active { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .st-inactive { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+    .st-disconnected { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
 
-    .metric-list { display: flex; flex-direction: column; gap: 8px; }
-    .metric-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 13px; }
-    .metric-label { color: var(--text-sub); font-weight: 600; }
-    .metric-val { font-weight: 800; color: var(--indigo-dark); direction: ltr; }
+    /* Live Metrics List */
+    .metric-list { display: flex; flex-direction: column; gap: 10px; }
+    .metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .metric-label { color: #334155; font-size: 13.5px; font-weight: 700; }
+    .metric-val {
+      font-size: 14.5px;
+      font-weight: 900;
+      color: var(--indigo-mid);
+      background: #eef2ff;
+      padding: 3px 10px;
+      border-radius: 8px;
+    }
 
-    .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .control-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; }
-    .control-box label { display: block; font-size: 12px; font-weight: 700; color: var(--indigo-dark); margin-bottom: 6px; }
-    select, input[type="text"], input[type="password"], input[type="tel"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; color: var(--text-main); outline: none; }
-    select:focus, input:focus { border-color: var(--purple-accent); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12); }
+    /* Resource Controls */
+    .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .control-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .control-box label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--indigo-dark);
+      margin-bottom: 8px;
+    }
+    select, input[type="text"], input[type="password"], input[type="tel"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #94a3b8;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #fff;
+      color: var(--text-main);
+      outline: none;
+    }
+    select:focus, input:focus {
+      border-color: var(--purple-accent);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
 
-    .btn-primary { width: 100%; padding: 11px 14px; background: linear-gradient(135deg, var(--purple-accent), var(--indigo-mid)); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25); }
+    .resource-footer-bar {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 12px;
+      color: #475569;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--purple-accent), var(--indigo-mid));
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.25);
+    }
     .btn-primary:active { transform: scale(0.98); }
 
-    .profile-top-bar { display: flex; justify-content: flex-end; align-items: center; min-height: 24px; margin-bottom: 4px; }
-    .more-options-link { color: #2563eb; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; background: none; border: none; padding: 2px 4px; }
-    .logout-link { color: #dc2626; font-size: 12px; font-weight: 700; cursor: pointer; background: none; border: none; padding: 2px 4px; }
-    .dp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 8px 0 14px; }
-    .dp-circle { width: 86px; height: 86px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan-bright), var(--purple-accent)); color: #fff; font-size: 32px; font-weight: 800; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.18); cursor: pointer; }
+    /* Profile Page (Top-Left More Options) */
+    .profile-top-bar {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 26px;
+      margin-bottom: 6px;
+    }
+    .more-options-link {
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 6px;
+      text-decoration: underline;
+    }
+    .logout-link {
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 4px 10px;
+    }
+    .dp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 8px 0 16px; }
+    .dp-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan-bright), var(--purple-accent));
+      color: #fff;
+      font-size: 34px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+      cursor: pointer;
+    }
     .dp-circle img { width: 100%; height: 100%; object-fit: cover; }
-    .dp-hint { font-size: 12px; color: #2563eb; font-weight: 600; cursor: pointer; }
+    .dp-hint { font-size: 12px; color: #2563eb; font-weight: 700; cursor: pointer; }
 
-    .admin-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #e2e8f0; padding: 4px; border-radius: 12px; direction: rtl; }
-    .admin-tab-btn { padding: 9px 6px; border: none; border-radius: 9px; background: transparent; color: var(--text-sub); font-size: 12px; font-weight: 700; cursor: pointer; }
-    .admin-tab-btn.active { background: #fff; color: var(--indigo-dark); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    /* Admin Tabs & Lists */
+    .admin-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #cbd5e1;
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .admin-tab-btn {
+      padding: 10px 6px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .admin-tab-btn.active {
+      background: #fff;
+      color: var(--indigo-dark);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-    .server-strip { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; direction: rtl; }
+    .server-strip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
     .strip-info { flex: 1; min-width: 0; }
-    .strip-name { font-size: 14px; font-weight: 800; color: var(--indigo-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-    .strip-meta-grid { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: 11px; color: var(--text-sub); }
-    .strip-pill { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; font-weight: 600; }
-    .strip-gear-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid #cbd5e1; background: #f8fafc; color: var(--indigo-dark); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .strip-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--indigo-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .strip-meta-grid { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: #334155; }
+    .strip-pill { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+    .strip-gear-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: var(--indigo-dark);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
-    .console-app-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
-    .ns-badge { background: #e0e7ff; color: #3730a3; font-family: monospace; font-size: 11px; padding: 2px 6px; border-radius: 6px; direction: ltr; }
-    .link-box { background: #0f172a; color: var(--cyan-bright); font-family: monospace; font-size: 11px; padding: 8px; border-radius: 8px; direction: ltr; text-align: left; overflow-x: auto; margin: 6px 0; }
-    .dual-btn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
-    .btn-sm { padding: 8px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; }
+    .console-app-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .ns-badge {
+      background: #e0e7ff;
+      color: #3730a3;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
+    .link-box {
+      background: #0f172a;
+      color: var(--cyan-bright);
+      font-family: monospace;
+      font-size: 11.5px;
+      padding: 9px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    .dual-btn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .btn-sm { padding: 9px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; }
 
-    .app-check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+    .app-check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
     .app-check-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--purple-accent); }
 
-    footer { flex-shrink: 0; background: #ffffff; border-top: 1px solid #cbd5e1; display: flex; direction: rtl; height: 60px; box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.06); z-index: 20; }
-    .footer-btn { flex: 1; background: none; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #64748b; font-size: 11px; font-weight: 700; cursor: pointer; position: relative; }
+    /* ==================== FIXED FOOTER ==================== */
+    footer {
+      flex-shrink: 0;
+      background: #ffffff;
+      border-top: 1px solid #cbd5e1;
+      display: flex;
+      height: 62px;
+      box-shadow: 0 -3px 12px rgba(15, 23, 42, 0.07);
+      z-index: 30;
+    }
+    .footer-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #64748b;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+    }
     .footer-btn.active { color: var(--purple-accent); background: #f5f3ff; }
-    .footer-btn.active::after { content: ""; position: absolute; top: 0; left: 20%; right: 20%; height: 3px; background: var(--purple-accent); border-radius: 0 0 4px 4px; }
-    .footer-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .footer-btn.active::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: var(--purple-accent);
+      border-radius: 0 0 4px 4px;
+    }
+    .footer-btn svg { width: 22px; height: 22px; fill: currentColor; pointer-events: none; }
+    .footer-btn span { pointer-events: none; }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="brand-wrap">
-      <svg class="nexa-logo" viewBox="0 0 100 100">
+  <!-- 3-SECOND FULLSCREEN SPLASH (#18 DOUBLE SONAR RADAR) -->
+  <div id="splash-screen">
+    <div class="splash-lockup">
+      <svg class="splash-svg" viewBox="0 0 200 185" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="nexaGrad" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="spCyan" x1="25" y1="160" x2="105" y2="15" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#06b6d4"/>
+            <stop offset="55%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#e0f2fe"/>
+          </linearGradient>
+          <linearGradient id="spPurple" x1="100" y1="15" x2="175" y2="160" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="50%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#c084fc"/>
+          </linearGradient>
+          <linearGradient id="spSwoosh" x1="30" y1="145" x2="172" y2="48" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stop-color="#22d3ee"/>
-            <stop offset="100%" stop-color="#818cf8"/>
+            <stop offset="50%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#a855f7"/>
           </linearGradient>
         </defs>
-        <polygon points="15,82 38,20 54,20 31,82" fill="#22d3ee"/>
-        <polygon points="85,82 62,20 46,20 69,82" fill="url(#nexaGrad)"/>
-        <polygon points="27,62 73,62 78,74 22,74" fill="#38bdf8"/>
+        <path d="M22 92 H46 M154 92 H178 M100 4 V16" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M100 16 L32 158 L62 158 L100 72 Z" fill="url(#spCyan)" fill-opacity="0.28" stroke="url(#spCyan)" stroke-width="4.5" stroke-linejoin="round"/>
+        <path d="M100 16 L47 158" stroke="#bae6fd" stroke-width="1.6" stroke-opacity="0.85"/>
+        <path d="M100 16 L168 158 L138 158 L100 72 Z" fill="url(#spPurple)" fill-opacity="0.3" stroke="url(#spPurple)" stroke-width="4.5" stroke-linejoin="round"/>
+        <path d="M100 16 L153 158" stroke="#e9d5ff" stroke-width="1.6" stroke-opacity="0.8"/>
+        <path d="M74 114 L126 114 M85 92 L115 92 M62 158 L100 114 L138 158" stroke="#7dd3fc" stroke-width="1.4" stroke-opacity="0.6"/>
+        <path d="M26 142 C 68 148, 134 112, 168 48 C 142 98, 86 132, 34 128 Z" fill="url(#spSwoosh)" stroke="#e0f2fe" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="100" cy="16" r="4" fill="#ffffff"/>
+        <circle cx="32" cy="158" r="4" fill="#22d3ee"/>
+        <circle cx="168" cy="158" r="4" fill="#c084fc"/>
+        <circle cx="168" cy="48" r="4.5" fill="#38bdf8"/>
+      </svg>
+      <div class="splash-title">ON NEXA</div>
+      <div class="splash-sub">SERVER</div>
+    </div>
+  </div>
+
+  <!-- FIXED HEADER -->
+  <header>
+    <div class="brand-wrap">
+      <svg class="header-logo" viewBox="0 0 200 185" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hdCyan" x1="25" y1="160" x2="105" y2="15" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#06b6d4"/>
+            <stop offset="100%" stop-color="#e0f2fe"/>
+          </linearGradient>
+          <linearGradient id="hdPurple" x1="100" y1="15" x2="175" y2="160" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="100%" stop-color="#c084fc"/>
+          </linearGradient>
+          <linearGradient id="hdSwoosh" x1="30" y1="145" x2="172" y2="48" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#22d3ee"/>
+            <stop offset="50%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+        <path d="M100 16 L32 158 L62 158 L100 72 Z" fill="url(#hdCyan)" fill-opacity="0.35" stroke="url(#hdCyan)" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M100 16 L168 158 L138 158 L100 72 Z" fill="url(#hdPurple)" fill-opacity="0.35" stroke="url(#hdPurple)" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M26 142 C 68 148, 134 112, 168 48 C 142 98, 86 132, 34 128 Z" fill="url(#hdSwoosh)" stroke="#e0f2fe" stroke-width="2.5"/>
       </svg>
       <div class="brand-titles">
         <div class="brand-name">
@@ -148,59 +569,61 @@
       </div>
     </div>
     <div class="header-live-dot">
-      <span class="dot" id="headerDot"></span>
-      <span id="headerStateShort">INIT</span>
+      <span class="dot active" id="headerDot"></span>
+      <span id="headerStateShort">ACTIVE</span>
     </div>
   </header>
 
+  <!-- MAIN CONTENT AREA -->
   <main>
+    <!-- 1. HOME PAGE -->
     <section id="view-home" class="page-view active">
       <div class="card server-hero">
-        <div class="card-header" style="margin-bottom:8px;">
+        <div class="card-header" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
           <div>
-            <div style="font-size:11px; color:#64748b; font-weight:700;">سرور کا نام (Server Name)</div>
+            <div class="server-name-label">Server Node Name</div>
             <div class="server-name-display" id="homeServerName">ON NEXA NODE</div>
           </div>
-          <span class="status-badge st-inactive" id="homeStatusBadge">Inactive</span>
+          <span class="status-badge st-active" id="homeStatusBadge">Active</span>
         </div>
-        <p id="batteryPauseNotice" style="display:none; font-size:12px; color:#b45309; background:#fef3c7; padding:6px 10px; border-radius:8px; font-weight:700;"></p>
+        <p id="batteryPauseNotice" style="display:none; margin-top:12px; font-size:12px; color:#b45309; background:#fef3c7; border:1px solid #fcd34d; padding:8px 12px; border-radius:8px; font-weight:700;"></p>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <span class="card-title">📊 سرور لائیو اعدادوشمار</span>
+          <span class="card-title">📊 Live Server Telemetry</span>
         </div>
         <div class="metric-list">
           <div class="metric-row">
-            <span class="metric-label">منسلک ایپلیکیشنز (Connected to Applications)</span>
-            <span class="metric-val" id="statConnectedApps">0</span>
+            <span class="metric-label">Connected to Applications</span>
+            <span class="metric-val" id="statConnectedApps">1</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">ٹوٹل آن لائن دورانیہ (Total Online Duration)</span>
+            <span class="metric-label">Total Online Duration</span>
             <span class="metric-val" id="statOnlineDuration">00:00:00</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">آن لائن / آف لائن تعداد (Online / Offline Count)</span>
-            <span class="metric-val" id="statToggleCount">0 / 0</span>
+            <span class="metric-label">Online / Offline Count</span>
+            <span class="metric-val" id="statToggleCount">1 / 0</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">ٹوٹل ڈیٹا موصول ہوا (Total Data Received)</span>
-            <span class="metric-val" id="statDataReceived">0 KB</span>
+            <span class="metric-label">Total Data Received</span>
+            <span class="metric-val" id="statDataReceived">0 B</span>
           </div>
           <div class="metric-row">
-            <span class="metric-label">ٹوٹل ڈیٹا بھیجا گیا (Total Data Sent)</span>
-            <span class="metric-val" id="statDataSent">0 KB</span>
+            <span class="metric-label">Total Data Sent</span>
+            <span class="metric-val" id="statDataSent">0 B</span>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <span class="card-title">⚙️ وسائل و تحفظ کنٹرول (Resource Limits)</span>
+          <span class="card-title">⚙️ Resource & Battery Protection</span>
         </div>
         <div class="control-grid">
           <div class="control-box">
-            <label for="memoryLimitSelect">مختص میموری (1 - 10 GB)</label>
+            <label for="memoryLimitSelect">Allocated Memory (1 - 10 GB)</label>
             <select id="memoryLimitSelect" onchange="saveResourceSettings()">
               <option value="1">1 GB</option>
               <option value="2" selected>2 GB</option>
@@ -215,70 +638,74 @@
             </select>
           </div>
           <div class="control-box">
-            <label for="batteryLimitSelect">بیٹری تحفظ حد (Stop Below)</label>
+            <label for="batteryLimitSelect">Battery Safety Cutoff</label>
             <select id="batteryLimitSelect" onchange="saveResourceSettings()">
-              <option value="15">15%</option>
-              <option value="20" selected>20%</option>
-              <option value="30">30%</option>
-              <option value="35">35%</option>
-              <option value="40">40%</option>
-              <option value="50">50%</option>
+              <option value="15">Stop Below 15%</option>
+              <option value="20" selected>Stop Below 20%</option>
+              <option value="30">Stop Below 30%</option>
+              <option value="35">Stop Below 35%</option>
+              <option value="40">Stop Below 40%</option>
+              <option value="50">Stop Below 50%</option>
             </select>
           </div>
         </div>
-        <div style="margin-top:10px; font-size:11px; color:#475569; display:flex; justify-content:space-between;">
-          <span>موجودہ بیٹری: <strong id="currentBatteryText">چیک ہو رہی ہے...</strong></span>
-          <span>بیک گراؤنڈ سنک: <strong style="color:#15803d;">خودکار فعال</strong></span>
+        <div class="resource-footer-bar">
+          <span>Battery: <strong id="currentBatteryText" style="color:#0f172a;">Optimal</strong></span>
+          <span>Background Sync: <strong style="color:#15803d;">Always-On</strong></span>
         </div>
       </div>
     </section>
 
+    <!-- 2. PROFILE PAGE -->
     <section id="view-profile" class="page-view">
       <div class="card">
         <div class="profile-top-bar">
-          <button class="more-options-link" id="moreOptionsBtn" onclick="openPasscodePage()">More Options</button>
-          <button class="logout-link" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">Logout</button>
+          <button type="button" class="more-options-link" id="moreOptionsBtn" onclick="openPasscodePage()">More Options</button>
+          <button type="button" class="logout-link" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">Logout</button>
         </div>
 
         <div class="dp-wrapper">
           <div class="dp-circle" id="dpCircle" onclick="document.getElementById('dpInput').click()">
             <span id="dpInitial">N</span>
           </div>
-          <span class="dp-hint" onclick="document.getElementById('dpInput').click()">تصویر (DP) تبدیل کریں</span>
+          <span class="dp-hint" onclick="document.getElementById('dpInput').click()">Change Profile Picture (DP)</span>
           <input type="file" id="dpInput" accept="image/*" style="display:none;" onchange="handleDpUpload(this)">
         </div>
 
-        <label style="font-size:13px; font-weight:700; color:#1e1b4b;">صارف / سرور کا نام (Display Name)</label>
-        <input type="text" id="profileNameInput" placeholder="اپنا نام لکھیں...">
-        <button class="btn-primary" onclick="saveUserProfile()">پروفائل محفوظ کریں</button>
+        <label style="display:block; font-size:13px; font-weight:800; color:#0f172a; margin-bottom:6px;">User / Server Display Name</label>
+        <input type="text" id="profileNameInput" placeholder="Enter your name...">
+        <button type="button" class="btn-primary" onclick="saveUserProfile()">Save Profile</button>
       </div>
 
-      <div class="card" id="adminChangePinCard" style="display:none; border-top:3px solid #0891b2;">
+      <div class="card" id="adminChangePinCard" style="display:none; border-top:4px solid #0891b2;">
         <div class="card-header">
-          <span class="card-title">🔐 ایڈمن پاس کوڈ تبدیل کریں</span>
+          <span class="card-title">🔐 Change Admin Passcode</span>
         </div>
-        <p style="font-size:12px; color:#475569; margin-bottom:6px;">نیا پاس کوڈ صرف 5 ہندسوں (Digits) کا ہونا چاہیے:</p>
-        <input type="tel" id="profileNewPinInput" maxlength="5" inputmode="numeric" placeholder="نیا 5 ہندسوں کا پاس کوڈ">
-        <button class="btn-primary" style="background:#0891b2;" onclick="updateAdminPasscode()">پاس کوڈ تبدیل کریں</button>
+        <p style="font-size:12px; color:#475569; margin-bottom:8px;">Enter a new 5-digit numeric passcode:</p>
+        <input type="tel" id="profileNewPinInput" maxlength="5" inputmode="numeric" placeholder="New 5-digit passcode">
+        <button type="button" class="btn-primary" style="background:#0891b2;" onclick="updateAdminPasscode()">Update Passcode</button>
       </div>
     </section>
 
+    <!-- 3. ADMIN PASSCODE LOGIN PAGE -->
     <section id="view-passcode" class="page-view">
-      <div class="card" style="margin-top:20px; text-align:center;">
+      <div class="card" style="margin-top:16px; text-align:center;">
         <div style="display:flex; justify-content:flex-start; margin-bottom:10px;">
-          <button class="more-options-link" onclick="switchView('profile')">↩ واپس پروفائل</button>
+          <button type="button" class="more-options-link" onclick="switchView('profile')">← Back to Profile</button>
         </div>
-        <h3 style="color:#1e1b4b; font-size:18px; margin-bottom:12px;">Passcode</h3>
-        <input type="password" id="passcodeEntryInput" maxlength="5" inputmode="numeric" placeholder="•••••" style="text-align:center; font-size:22px; letter-spacing:8px; font-weight:800;">
-        <button class="btn-primary" onclick="submitAdminPasscode()">Enter</button>
+        <h3 style="color:#0f172a; font-size:20px; font-weight:900; margin-bottom:6px;">Passcode</h3>
+        <p style="font-size:12px; color:#64748b; margin-bottom:14px;">Enter 5-digit Admin Passcode to unlock Server Settings</p>
+        <input type="password" id="passcodeEntryInput" maxlength="5" inputmode="numeric" placeholder="•••••" style="text-align:center; font-size:24px; letter-spacing:10px; font-weight:900;">
+        <button type="button" class="btn-primary" onclick="submitAdminPasscode()">Enter</button>
       </div>
     </section>
 
+    <!-- 4. ADMIN SETTINGS PAGE -->
     <section id="view-settings" class="page-view">
       <div class="admin-tabs">
-        <button class="admin-tab-btn active" id="tabBtnOnline" onclick="switchAdminSubTab('online')">آن لائن سرورز</button>
-        <button class="admin-tab-btn" id="tabBtnOffline" onclick="switchAdminSubTab('offline')">آف لائن سرورز</button>
-        <button class="admin-tab-btn" id="tabBtnConsole" onclick="switchAdminSubTab('console')">سرور کنسول</button>
+        <button type="button" class="admin-tab-btn active" id="tabBtnOnline" onclick="switchAdminSubTab('online')">Online Servers</button>
+        <button type="button" class="admin-tab-btn" id="tabBtnOffline" onclick="switchAdminSubTab('offline')">Offline Servers</button>
+        <button type="button" class="admin-tab-btn" id="tabBtnConsole" onclick="switchAdminSubTab('console')">Server Console</button>
       </div>
 
       <div id="admin-sub-online">
@@ -292,69 +719,79 @@
       <div id="admin-sub-console" style="display:none;">
         <div class="card">
           <div class="card-header">
-            <span class="card-title">🚀 بیرونی ایپلیکیشنز کنکشن کنسول</span>
+            <span class="card-title">🚀 Connected Applications Console</span>
           </div>
-          <p style="font-size:12px; color:#475569; margin-bottom:10px;">ہر ایپلیکیشن کے لیے الگ کنکشن لنک اور کلائنٹ JS فائل دستیاب ہے تاکہ ڈیٹا آپس میں مکس نہ ہو۔</p>
+          <p style="font-size:12px; color:#475569; margin-bottom:12px;">Alqaem School System (v17.10.33) is permanently linked by default. Only Admin can connect or disconnect applications.</p>
           <div id="consoleAppsList"></div>
         </div>
 
         <div class="card">
           <div class="card-header">
-            <span class="card-title">➕ نئی ایپلیکیشن شامل کریں</span>
+            <span class="card-title">➕ Register New Application</span>
           </div>
-          <input type="text" id="newConsoleAppName" placeholder="ایپ کا نام (مثلاً: Alqaem Fee System)">
-          <input type="text" id="newConsoleAppSlug" placeholder="انگریزی کوڈ آئی ڈی (مثلاً: fee-system)">
-          <button class="btn-primary" onclick="createNewConsoleApp()">نئی ایپلیکیشن رجسٹر کریں</button>
+          <input type="text" id="newConsoleAppName" placeholder="Application Name (e.g., Alqaem Fee Portal)" style="margin-bottom:8px;">
+          <input type="text" id="newConsoleAppSlug" placeholder="App Slug ID (e.g., alqaem-fee-portal)">
+          <button type="button" class="btn-primary" onclick="createNewConsoleApp()">Create Connection Endpoint</button>
         </div>
       </div>
     </section>
 
+    <!-- 5. ADMIN NODE DETAIL & APP LINKING PAGE -->
     <section id="view-node-detail" class="page-view">
       <div class="card">
         <div class="card-header">
-          <span class="card-title">🛠️ سرور نوڈ سیٹنگز</span>
-          <button class="more-options-link" onclick="switchView('settings')">↩ واپس</button>
+          <span class="card-title">🛠️ Server Node Configuration</span>
+          <button type="button" class="more-options-link" onclick="switchView('settings')">← Back</button>
         </div>
-        <label style="font-size:12px; font-weight:700; color:#1e1b4b;">سرور کا نام تبدیل کریں:</label>
-        <input type="text" id="editNodeNameInput" placeholder="سرور کا نیا نام">
-        <button class="btn-primary" onclick="saveNodeCustomName()">نام محفوظ کریں</button>
+        <label style="display:block; font-size:12px; font-weight:800; color:#0f172a; margin-bottom:6px;">Rename Server Node:</label>
+        <input type="text" id="editNodeNameInput" placeholder="Enter new server name">
+        <button type="button" class="btn-primary" onclick="saveNodeCustomName()">Save Server Name</button>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <span class="card-title">🔗 Link to Application (ایپس منتخب کریں)</span>
+          <span class="card-title">🔗 Link to Application (Admin Control)</span>
         </div>
-        <p style="font-size:12px; color:#475569; margin-bottom:8px;">جن ایپلیکیشنز کا ڈیٹا اس سرور پر محفوظ کرنا ہے انہیں ٹک (✓) کریں:</p>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Check (✓) applications to store and sync their data on this server. Uncheck to disconnect:</p>
         <div id="nodeAppTickList"></div>
-        <button class="btn-primary" style="background:#0891b2;" onclick="saveNodeLinkedApps()">منسلک ایپس محفوظ کریں</button>
+        <button type="button" class="btn-primary" style="background:#0891b2;" onclick="saveNodeLinkedApps()">Save Linked Applications</button>
       </div>
     </section>
   </main>
 
+  <!-- FIXED FOOTER NAVIGATION -->
   <footer>
-    <button class="footer-btn" id="footProfileBtn" onclick="switchView('profile')">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-      <span>پروفائل</span>
-    </button>
-
-    <button class="footer-btn" id="footSettingsBtn" style="display:none;" onclick="switchView('settings')">
-      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      <span>سیٹنگز</span>
-    </button>
-
-    <button class="footer-btn active" id="footHomeBtn" onclick="switchView('home')">
+    <button type="button" class="footer-btn active" id="footHomeBtn" onclick="switchView('home')">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span>ہوم</span>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="footer-btn" id="footSettingsBtn" style="display:none;" onclick="switchView('settings')">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      <span>Settings</span>
+    </button>
+
+    <button type="button" class="footer-btn" id="footProfileBtn" onclick="switchView('profile')">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      <span>Profile</span>
     </button>
   </footer>
 
   <script>
+    // Dismiss 3-second Splash Screen cleanly
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.classList.add('hidden');
+    }, 3000);
+
+    // Service Worker Registration & Cache Refresh
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').then(r => r.update()).catch(() => {});
     }
     if (navigator.storage && navigator.storage.persist) {
       navigator.storage.persist().catch(() => {});
     }
+
     let wakeLock = null;
     async function requestWakeLock() {
       try {
@@ -382,6 +819,8 @@
 
     const MY_NODE_ID = 'nexa-srv-' + getDeviceUid();
     const MASTER_DIRECTORY_ID = 'on-nexa-global-directory-v1';
+    const SCHOOL_APP_SLUG = 'alqaem-school-system';
+    const SCHOOL_APP_URL = 'https://alqaem-school-system.alqaemitacademy.workers.dev';
 
     let userName = localStorage.getItem('nexa_user_name') || ('NEXA-' + getDeviceUid().slice(-4).toUpperCase());
     let userDp = localStorage.getItem('nexa_user_dp') || '';
@@ -399,12 +838,27 @@
     let bytesReceived = parseInt(localStorage.getItem('nexa_bytes_rx') || '0', 10);
     let bytesSent = parseInt(localStorage.getItem('nexa_bytes_tx') || '0', 10);
 
+    // Default Permanent Link to Alqaem School System (v17.10.33)
     const DEFAULT_APPS = [
-      { title: 'Alqaem School System', slug: 'alqaem-school-system' },
-      { title: 'Alqaem IT Academy', slug: 'alqaem-it-academy' }
+      { title: 'Alqaem School System (v17.10.33)', slug: SCHOOL_APP_SLUG, url: SCHOOL_APP_URL },
+      { title: 'Alqaem IT Academy', slug: 'alqaem-it-academy', url: '' }
     ];
+
     let registeredApps = JSON.parse(localStorage.getItem('nexa_registered_apps') || 'null') || DEFAULT_APPS;
-    let myLinkedApps = JSON.parse(localStorage.getItem('nexa_my_linked_apps') || 'null') || registeredApps.map(a => a.slug);
+    if (!registeredApps.some(a => a.slug === SCHOOL_APP_SLUG)) {
+      registeredApps.unshift(DEFAULT_APPS[0]);
+      localStorage.setItem('nexa_registered_apps', JSON.stringify(registeredApps));
+    }
+
+    // Automatically link Alqaem School System permanently unless Admin explicitly disconnects it
+    let storedLinked = JSON.parse(localStorage.getItem('nexa_my_linked_apps') || 'null');
+    const adminManuallyDisconnectedSchool = localStorage.getItem('nexa_admin_unlinked_school') === 'true';
+    let myLinkedApps = Array.isArray(storedLinked) ? storedLinked : [SCHOOL_APP_SLUG];
+    if (!adminManuallyDisconnectedSchool && !myLinkedApps.includes(SCHOOL_APP_SLUG)) {
+      myLinkedApps.unshift(SCHOOL_APP_SLUG);
+      localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
+    }
+
     let nodeRegistry = JSON.parse(localStorage.getItem('nexa_node_registry') || '{}');
 
     document.getElementById('memoryLimitSelect').value = memoryLimitGB;
@@ -430,7 +884,8 @@
 
     function switchView(viewName) {
       document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-' + viewName).classList.add('active');
+      const targetView = document.getElementById('view-' + viewName);
+      if (targetView) targetView.classList.add('active');
 
       document.querySelectorAll('.footer-btn').forEach(b => b.classList.remove('active'));
       if (viewName === 'home') document.getElementById('footHomeBtn').classList.add('active');
@@ -454,7 +909,7 @@
           canvas.height = 160;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, 160, 160);
-          userDp = canvas.toDataURL('image/jpeg', 0.8);
+          userDp = canvas.toDataURL('image/jpeg', 0.82);
           localStorage.setItem('nexa_user_dp', userDp);
           refreshProfileAndAdminUI();
           broadcastNodeHeartbeat();
@@ -471,7 +926,7 @@
         localStorage.setItem('nexa_user_name', userName);
         refreshProfileAndAdminUI();
         broadcastNodeHeartbeat();
-        alert("پروفائل محفوظ ہو گئی۔");
+        alert("Profile saved successfully.");
       }
     }
 
@@ -488,7 +943,7 @@
         refreshProfileAndAdminUI();
         switchView('settings');
       } else {
-        alert("غلط پاس کوڈ! درست 5 ہندسوں کا کوڈ درج کریں۔");
+        alert("Invalid Passcode! Please enter the correct 5-digit Admin Passcode.");
       }
     }
 
@@ -502,13 +957,13 @@
     function updateAdminPasscode() {
       const newPin = document.getElementById('profileNewPinInput').value.trim();
       if (!/^\d{5}$/.test(newPin)) {
-        alert("پاس کوڈ صرف 5 ہندسوں (0 سے 9) پر مشتمل ہونا چاہیے۔");
+        alert("Passcode must be exactly 5 numeric digits (0-9).");
         return;
       }
       adminPasscode = newPin;
       localStorage.setItem('nexa_admin_pin', newPin);
       document.getElementById('profileNewPinInput').value = '';
-      alert("ایڈمن پاس کوڈ کامیابی سے تبدیل کر دیا گیا ہے۔");
+      alert("Admin passcode updated successfully.");
     }
 
     function saveResourceSettings() {
@@ -519,13 +974,680 @@
       evaluateBatteryAndServerState();
     }
 
+    // Battery Status Detection
     let currentBatteryPct = 100;
     let isCharging = true;
     let isPausedByBattery = false;
 
-    if (navigator.getBattery) {
+    if (typeof navigator.getBattery === 'function') {
       navigator.getBattery().then((bat) => {
         const updateBat = () => {
           currentBatteryPct = Math.round(bat.level * 100);
           isCharging = bat.charging;
-          document.get
+          document.getElementById('currentBatteryText').innerText = `${currentBatteryPct}% ${isCharging ? '⚡' : ''}`;
+          evaluateBatteryAndServerState();
+        };
+        updateBat();
+        bat.addEventListener('levelchange', updateBat);
+        bat.addEventListener('chargingchange', updateBat);
+      }).catch(() => {
+        document.getElementById('currentBatteryText').innerText = 'AC / Optimal';
+      });
+    } else {
+      document.getElementById('currentBatteryText').innerText = 'AC / Optimal';
+    }
+
+    function evaluateBatteryAndServerState() {
+      const notice = document.getElementById('batteryPauseNotice');
+      if (!isCharging && currentBatteryPct <= batteryThreshold) {
+        if (!isPausedByBattery) {
+          isPausedByBattery = true;
+          setServerVisualState('Inactive');
+          if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
+        }
+        notice.style.display = 'block';
+        notice.innerText = `⚠️ Battery is at ${currentBatteryPct}% (Limit: ${batteryThreshold}%) — Server paused (Inactive) to preserve battery.`;
+      } else {
+        if (isPausedByBattery) {
+          isPausedByBattery = false;
+          notice.style.display = 'none';
+          ensureNetworkRunning();
+        }
+      }
+    }
+
+    // Persistent Local IndexedDB Vault
+    let db = null;
+    const appDataStore = new Map();
+
+    function initDatabase() {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) return resolve();
+        const req = indexedDB.open('OnNexaServerVault_v1', 1);
+        req.onupgradeneeded = (e) => {
+          const d = e.target.result;
+          if (!d.objectStoreNames.contains('records')) {
+            d.createObjectStore('records', { keyPath: 'uid' });
+          }
+        };
+        req.onsuccess = (e) => {
+          db = e.target.result;
+          const tx = db.transaction('records', 'readonly');
+          tx.objectStore('records').getAll().onsuccess = (ev) => {
+            (ev.target.result || []).forEach(rec => {
+              if (!appDataStore.has(rec.namespace)) appDataStore.set(rec.namespace, new Map());
+              appDataStore.get(rec.namespace).set(rec.key, rec);
+            });
+            resolve();
+          };
+        };
+        req.onerror = () => resolve();
+      });
+    }
+
+    function saveRecordToVault(namespace, record) {
+      const slug = namespace.replace('alqaem-cluster-', '');
+      if (!myLinkedApps.includes(slug) && !myLinkedApps.includes(namespace)) return false;
+
+      if (!appDataStore.has(namespace)) appDataStore.set(namespace, new Map());
+      const existing = appDataStore.get(namespace).get(record.key);
+      if (existing && existing.ts >= record.ts) return false;
+
+      const fullRec = { uid: `${namespace}::${record.key}`, namespace, ...record };
+      appDataStore.get(namespace).set(record.key, fullRec);
+
+      if (db) {
+        const tx = db.transaction('records', 'readwrite');
+        tx.objectStore('records').put(fullRec);
+      }
+      return true;
+    }
+
+    // Reliable Single-Socket P2P Mesh Engine
+    const PEER_CONFIG = {
+      debug: 0,
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' }
+        ]
+      }
+    };
+
+    let peer = null;
+    let serverState = 'Inactive';
+    const connections = new Map();
+    const connectingAt = new Map();
+    const lastPingRtt = new Map();
+
+    function setServerVisualState(newState) {
+      if (serverState !== newState) {
+        if (newState === 'Active') {
+          onlineCount++;
+          localStorage.setItem('nexa_online_count', onlineCount.toString());
+        } else if (serverState === 'Active' && newState !== 'Active') {
+          offlineCount++;
+          localStorage.setItem('nexa_offline_count', offlineCount.toString());
+        }
+        serverState = newState;
+      }
+
+      const badge = document.getElementById('homeStatusBadge');
+      const dot = document.getElementById('headerDot');
+      const shortTxt = document.getElementById('headerStateShort');
+
+      badge.innerText = serverState;
+      shortTxt.innerText = serverState.toUpperCase();
+      badge.className = 'status-badge ' + (
+        serverState === 'Active' ? 'st-active' :
+        serverState === 'Inactive' ? 'st-inactive' : 'st-disconnected'
+      );
+      dot.className = 'dot ' + serverState.toLowerCase();
+      refreshHomeMetricsUI();
+    }
+
+    function ensureNetworkRunning() {
+      if (isPausedByBattery) return;
+      if (!navigator.onLine) {
+        setServerVisualState('Disconnected');
+        return;
+      }
+
+      setServerVisualState('Active');
+      updateLocalNodeRegistry();
+
+      if (typeof window.Peer !== 'function') return;
+      if (!peer || peer.destroyed) {
+        startPrimaryServerNode();
+      } else if (peer.disconnected) {
+        try { peer.reconnect(); } catch (e) {}
+      }
+    }
+
+    function startPrimaryServerNode() {
+      try {
+        peer = new window.Peer(MY_NODE_ID, PEER_CONFIG);
+      } catch (e) { return; }
+
+      peer.on('open', () => {
+        setServerVisualState('Active');
+        updateLocalNodeRegistry();
+        discoverAndConnectPeers();
+      });
+
+      peer.on('connection', (conn) => bindPeerConnection(conn));
+
+      peer.on('disconnected', () => {
+        if (navigator.onLine && !isPausedByBattery) {
+          setTimeout(() => { try { if (peer && !peer.destroyed) peer.reconnect(); } catch (e) {} }, 3000);
+        }
+      });
+
+      peer.on('error', () => {
+        setTimeout(() => {
+          if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
+          if (navigator.onLine && !isPausedByBattery) startPrimaryServerNode();
+        }, 6000);
+      });
+    }
+
+    function discoverAndConnectPeers() {
+      if (!peer || !peer.open || isPausedByBattery) return;
+      const targets = new Set([MASTER_DIRECTORY_ID, ...Object.keys(nodeRegistry)]);
+      const now = Date.now();
+
+      targets.forEach(targetId => {
+        if (targetId === MY_NODE_ID) return;
+        const ex = connections.get(targetId);
+        if (ex && ex.open) return;
+        if (now - (connectingAt.get(targetId) || 0) < 10000) return;
+
+        connectingAt.set(targetId, now);
+        try {
+          const conn = peer.connect(targetId, { reliable: true });
+          if (conn) bindPeerConnection(conn);
+        } catch (e) {}
+      });
+    }
+
+    function sendPacket(conn, obj) {
+      if (!conn || !conn.open) return;
+      const str = JSON.stringify(obj);
+      bytesSent += str.length;
+      localStorage.setItem('nexa_bytes_tx', bytesSent.toString());
+      conn.send(obj);
+    }
+
+    function bindPeerConnection(conn) {
+      conn.on('open', () => {
+        connections.set(conn.peer, conn);
+        connectingAt.delete(conn.peer);
+        sendPacket(conn, {
+          type: 'NEXA_HELLO',
+          nodeMeta: getMyNodeMeta(),
+          directory: nodeRegistry,
+          pingTs: Date.now()
+        });
+        syncAllNamespacesWithPeer(conn);
+        refreshHomeMetricsUI();
+      });
+
+      conn.on('data', (msg) => {
+        if (!msg || !msg.type) return;
+        bytesReceived += JSON.stringify(msg).length;
+        localStorage.setItem('nexa_bytes_rx', bytesReceived.toString());
+
+        if (msg.type === 'NEXA_HELLO') {
+          if (msg.nodeMeta && msg.nodeMeta.nodeId) {
+            nodeRegistry[msg.nodeMeta.nodeId] = { ...msg.nodeMeta, online: true, lastSeen: Date.now() };
+          }
+          if (msg.directory) {
+            Object.entries(msg.directory).forEach(([nid, meta]) => {
+              if (!nodeRegistry[nid] || (meta.lastSeen || 0) > (nodeRegistry[nid].lastSeen || 0)) {
+                nodeRegistry[nid] = meta;
+              }
+            });
+          }
+          localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+          if (msg.pingTs) {
+            sendPacket(conn, { type: 'NEXA_PONG', pingTs: msg.pingTs, nodeMeta: getMyNodeMeta() });
+          }
+          discoverAndConnectPeers();
+          if (isAdmin) renderAdminServerLists();
+          return;
+        }
+
+        if (msg.type === 'NEXA_PONG') {
+          if (msg.pingTs) lastPingRtt.set(conn.peer, Date.now() - msg.pingTs);
+          if (msg.nodeMeta && msg.nodeMeta.nodeId) {
+            nodeRegistry[msg.nodeMeta.nodeId] = { ...msg.nodeMeta, online: true, lastSeen: Date.now(), rtt: lastPingRtt.get(conn.peer) || 35 };
+            localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+          }
+          if (isAdmin) renderAdminServerLists();
+          return;
+        }
+
+        if (msg.type === 'ADMIN_UPDATE_NODE' && msg.targetNodeId === MY_NODE_ID) {
+          if (msg.newName) {
+            userName = msg.newName;
+            localStorage.setItem('nexa_user_name', userName);
+            refreshProfileAndAdminUI();
+          }
+          if (Array.isArray(msg.linkedApps)) {
+            myLinkedApps = msg.linkedApps;
+            localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
+          }
+          broadcastNodeHeartbeat();
+          return;
+        }
+
+        if (msg.type === 'APP_DATA_PUSH' && msg.namespace && msg.record) {
+          const saved = saveRecordToVault(msg.namespace, msg.record);
+          sendPacket(conn, { type: 'APP_DATA_ACK', namespace: msg.namespace, key: msg.record.key, serverId: MY_NODE_ID });
+          if (saved) {
+            connections.forEach((c, pid) => {
+              if (pid !== conn.peer && c && c.open) sendPacket(c, msg);
+            });
+          }
+          refreshHomeMetricsUI();
+          return;
+        }
+
+        if (msg.type === 'APP_SYNC_REQ' && msg.namespace) {
+          const nsMap = appDataStore.get(msg.namespace);
+          if (nsMap) {
+            const clientKeys = new Set(msg.keys || []);
+            nsMap.forEach((rec, k) => {
+              if (!clientKeys.has(k)) {
+                sendPacket(conn, { type: 'APP_DATA_PUSH', namespace: msg.namespace, record: rec });
+              }
+            });
+          }
+          return;
+        }
+      });
+
+      conn.on('close', () => {
+        if (nodeRegistry[conn.peer]) {
+          nodeRegistry[conn.peer].online = false;
+          localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+        }
+        connections.delete(conn.peer);
+        connectingAt.delete(conn.peer);
+        refreshHomeMetricsUI();
+        if (isAdmin) renderAdminServerLists();
+      });
+    }
+
+    function syncAllNamespacesWithPeer(conn) {
+      appDataStore.forEach((nsMap, ns) => {
+        nsMap.forEach((rec) => {
+          sendPacket(conn, { type: 'APP_DATA_PUSH', namespace: ns, record: rec });
+        });
+      });
+    }
+
+    function getMyNodeMeta() {
+      return {
+        nodeId: MY_NODE_ID,
+        name: userName,
+        firstOnline: firstOnlineTs,
+        totalOnlineSec: totalOnlineSeconds,
+        bytesRx: bytesReceived,
+        linkedApps: myLinkedApps,
+        online: serverState === 'Active',
+        lastSeen: Date.now()
+      };
+    }
+
+    function updateLocalNodeRegistry() {
+      nodeRegistry[MY_NODE_ID] = getMyNodeMeta();
+      localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+    }
+
+    function broadcastNodeHeartbeat() {
+      updateLocalNodeRegistry();
+      connections.forEach((conn) => {
+        if (conn && conn.open) {
+          sendPacket(conn, {
+            type: 'NEXA_HELLO',
+            nodeMeta: getMyNodeMeta(),
+            directory: nodeRegistry,
+            pingTs: Date.now()
+          });
+        }
+      });
+    }
+
+    setInterval(() => {
+      if (serverState === 'Active' && navigator.onLine && !isPausedByBattery) {
+        totalOnlineSeconds++;
+        localStorage.setItem('nexa_total_online_sec', totalOnlineSeconds.toString());
+        refreshHomeMetricsUI();
+      }
+    }, 1000);
+
+    setInterval(() => {
+      ensureNetworkRunning();
+      discoverAndConnectPeers();
+      broadcastNodeHeartbeat();
+    }, 6000);
+
+    window.addEventListener('online', () => ensureNetworkRunning());
+    window.addEventListener('offline', () => setServerVisualState('Disconnected'));
+
+    function formatDuration(sec) {
+      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    function formatDataSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+      if (bytes < 1073741824) return (bytes / 1048576).toFixed(2) + ' MB';
+      return (bytes / 1073741824).toFixed(2) + ' GB';
+    }
+
+    function refreshHomeMetricsUI() {
+      document.getElementById('statConnectedApps').innerText = myLinkedApps.length;
+      document.getElementById('statOnlineDuration').innerText = formatDuration(totalOnlineSeconds);
+      document.getElementById('statToggleCount').innerText = `${onlineCount} / ${offlineCount}`;
+      document.getElementById('statDataReceived').innerText = formatDataSize(bytesReceived);
+      document.getElementById('statDataSent').innerText = formatDataSize(bytesSent);
+    }
+
+    function switchAdminSubTab(tab) {
+      document.getElementById('tabBtnOnline').classList.toggle('active', tab === 'online');
+      document.getElementById('tabBtnOffline').classList.toggle('active', tab === 'offline');
+      document.getElementById('tabBtnConsole').classList.toggle('active', tab === 'console');
+
+      document.getElementById('admin-sub-online').style.display = tab === 'online' ? 'block' : 'none';
+      document.getElementById('admin-sub-offline').style.display = tab === 'offline' ? 'block' : 'none';
+      document.getElementById('admin-sub-console').style.display = tab === 'console' ? 'block' : 'none';
+    }
+
+    function getSignalBars(rtt) {
+      if (!rtt || rtt < 120) return '📶 100% (Excellent)';
+      if (rtt < 300) return '📶 75% (Good)';
+      return '📶 50% (Fair)';
+    }
+
+    function renderAdminServerLists() {
+      updateLocalNodeRegistry();
+      const onlineBox = document.getElementById('onlineServersContainer');
+      const offlineBox = document.getElementById('offlineServersContainer');
+      onlineBox.innerHTML = '';
+      offlineBox.innerHTML = '';
+
+      const allNodes = Object.values(nodeRegistry);
+      const onlineNodes = allNodes.filter(n => n.nodeId === MY_NODE_ID ? serverState === 'Active' : (connections.has(n.nodeId) && connections.get(n.nodeId).open));
+      const offlineNodes = allNodes.filter(n => !onlineNodes.some(o => o.nodeId === n.nodeId));
+
+      if (onlineNodes.length === 0) {
+        onlineBox.innerHTML = '<div class="card"><p style="font-size:13px; color:#64748b;">No online server nodes available right now.</p></div>';
+      } else {
+        onlineNodes.forEach(node => onlineBox.appendChild(createServerStripElement(node, true)));
+      }
+
+      if (offlineNodes.length === 0) {
+        offlineBox.innerHTML = '<div class="card"><p style="font-size:13px; color:#64748b;">No offline server nodes recorded.</p></div>';
+      } else {
+        offlineNodes.forEach(node => offlineBox.appendChild(createServerStripElement(node, false)));
+      }
+    }
+
+    function createServerStripElement(node, isOnline) {
+      const strip = document.createElement('div');
+      strip.className = 'server-strip';
+      const firstDate = new Date(node.firstOnline || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const signalTxt = isOnline ? getSignalBars(node.rtt) : '📵 Offline';
+
+      strip.innerHTML = `
+        <div class="strip-info">
+          <div class="strip-name">
+            <span style="color:${isOnline ? '#16a34a' : '#dc2626'};">●</span>
+            <span>${escapeHtml(node.name || node.nodeId)}</span>
+          </div>
+          <div class="strip-meta-grid">
+            <span class="strip-pill">First Online: ${firstDate}</span>
+            <span class="strip-pill">Duration: ${formatDuration(node.totalOnlineSec || 0)}</span>
+            <span class="strip-pill">Received: ${formatDataSize(node.bytesRx || 0)}</span>
+            <span class="strip-pill">${signalTxt}</span>
+          </div>
+        </div>
+        <button type="button" class="strip-gear-btn" title="Server Node Settings" onclick="openNodeDetailSettings('${node.nodeId}')">⚙️</button>
+      `;
+      return strip;
+    }
+
+    let editingNodeId = null;
+
+    function openNodeDetailSettings(nodeId) {
+      editingNodeId = nodeId;
+      const node = nodeRegistry[nodeId] || { nodeId, name: nodeId, linkedApps: [] };
+      document.getElementById('editNodeNameInput').value = node.name || '';
+
+      const tickList = document.getElementById('nodeAppTickList');
+      tickList.innerHTML = '';
+      const assigned = new Set(node.linkedApps || []);
+
+      registeredApps.forEach(app => {
+        const row = document.createElement('label');
+        row.className = 'app-check-row';
+        row.innerHTML = `
+          <span>${escapeHtml(app.title)}</span>
+          <input type="checkbox" value="${app.slug}" ${assigned.has(app.slug) ? 'checked' : ''}>
+        `;
+        tickList.appendChild(row);
+      });
+
+      switchView('node-detail');
+    }
+
+    function saveNodeCustomName() {
+      if (!editingNodeId) return;
+      const newName = document.getElementById('editNodeNameInput').value.trim();
+      if (!newName) return;
+
+      if (editingNodeId === MY_NODE_ID) {
+        userName = newName;
+        localStorage.setItem('nexa_user_name', userName);
+        refreshProfileAndAdminUI();
+      } else {
+        const conn = connections.get(editingNodeId);
+        if (conn && conn.open) sendPacket(conn, { type: 'ADMIN_UPDATE_NODE', targetNodeId: editingNodeId, newName });
+      }
+      if (nodeRegistry[editingNodeId]) {
+        nodeRegistry[editingNodeId].name = newName;
+        localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+      }
+      alert("Server name updated successfully.");
+    }
+
+    function saveNodeLinkedApps() {
+      if (!editingNodeId) return;
+      const checked = Array.from(document.querySelectorAll('#nodeAppTickList input[type="checkbox"]:checked')).map(cb => cb.value);
+
+      if (editingNodeId === MY_NODE_ID) {
+        myLinkedApps = checked;
+        localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
+        if (!checked.includes(SCHOOL_APP_SLUG)) {
+          localStorage.setItem('nexa_admin_unlinked_school', 'true');
+        } else {
+          localStorage.removeItem('nexa_admin_unlinked_school');
+        }
+        refreshHomeMetricsUI();
+        renderConsoleApps();
+      } else {
+        const conn = connections.get(editingNodeId);
+        if (conn && conn.open) sendPacket(conn, { type: 'ADMIN_UPDATE_NODE', targetNodeId: editingNodeId, linkedApps: checked });
+      }
+      if (nodeRegistry[editingNodeId]) {
+        nodeRegistry[editingNodeId].linkedApps = checked;
+        localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
+      }
+      alert("Linked applications updated successfully.");
+    }
+
+    function createNewConsoleApp() {
+      const title = document.getElementById('newConsoleAppName').value.trim();
+      const slug = document.getElementById('newConsoleAppSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+      if (!title || !slug) {
+        alert("Please enter both Application Name and App Slug ID.");
+        return;
+      }
+      if (registeredApps.some(a => a.slug === slug)) {
+        alert("This App Slug ID already exists.");
+        return;
+      }
+      registeredApps.push({ title, slug, url: '' });
+      localStorage.setItem('nexa_registered_apps', JSON.stringify(registeredApps));
+      myLinkedApps.push(slug);
+      localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
+
+      document.getElementById('newConsoleAppName').value = '';
+      document.getElementById('newConsoleAppSlug').value = '';
+      renderConsoleApps();
+      refreshHomeMetricsUI();
+    }
+
+    function toggleAppConnectionFromConsole(slug) {
+      if (!isAdmin) return;
+      if (myLinkedApps.includes(slug)) {
+        myLinkedApps = myLinkedApps.filter(s => s !== slug);
+        if (slug === SCHOOL_APP_SLUG) localStorage.setItem('nexa_admin_unlinked_school', 'true');
+      } else {
+        myLinkedApps.push(slug);
+        if (slug === SCHOOL_APP_SLUG) localStorage.removeItem('nexa_admin_unlinked_school');
+      }
+      localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
+      updateLocalNodeRegistry();
+      refreshHomeMetricsUI();
+      renderConsoleApps();
+    }
+
+    function renderConsoleApps() {
+      const box = document.getElementById('consoleAppsList');
+      box.innerHTML = '';
+      registeredApps.forEach(app => {
+        const ns = `alqaem-cluster-${app.slug}`;
+        const isLinked = myLinkedApps.includes(app.slug);
+        const connUrl = app.url ? `${app.url}?nexa=${ns}` : `${window.location.origin}${window.location.pathname}?app=${ns}`;
+        const el = document.createElement('div');
+        el.className = 'console-app-box';
+        el.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong style="font-size:14px; color:#0f172a;">📱 ${escapeHtml(app.title)}</strong>
+            <span class="ns-badge" style="background:${isLinked ? '#dcfce7' : '#fee2e2'}; color:${isLinked ? '#15803d' : '#b91c1c'};">
+              ${isLinked ? '● CONNECTED' : '○ DISCONNECTED'}
+            </span>
+          </div>
+          <div class="link-box">${connUrl}</div>
+          <div class="dual-btn">
+            <button type="button" class="btn-sm" style="background:${isLinked ? '#dc2626' : '#16a34a'};" onclick="toggleAppConnectionFromConsole('${app.slug}')">
+              ${isLinked ? 'Disconnect App' : 'Connect App'}
+            </button>
+            <button type="button" class="btn-sm" style="background:#0891b2;" onclick="downloadAppClientJs('${app.slug}', '${escapeHtml(app.title)}')">⬇️ Client SDK (.js)</button>
+          </div>
+        `;
+        box.appendChild(el);
+      });
+    }
+
+    function downloadAppClientJs(slug, title) {
+      const ns = `alqaem-cluster-${slug}`;
+      const code = `/**
+ * ON NEXA SERVER - Client Connector SDK
+ * App: ${title}
+ * Namespace: ${ns}
+ */
+(function() {
+  const NAMESPACE = "${ns}";
+  const DIR_ID = "${MASTER_DIRECTORY_ID}";
+  const CFG = { config: { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }] } };
+
+  let peer = null;
+  const conns = new Map();
+  const servers = new Set([DIR_ID]);
+  const cache = new Map();
+  const callbacks = [];
+
+  function boot() {
+    peer = new Peer(CFG);
+    peer.on("open", () => dialServers());
+    peer.on("connection", (c) => attach(c));
+    peer.on("error", () => setTimeout(boot, 4000));
+    setInterval(dialServers, 6000);
+  }
+
+  function dialServers() {
+    if (!peer || !peer.open) return;
+    servers.forEach(id => {
+      if (id === peer.id) return;
+      const ex = conns.get(id);
+      if (!ex || !ex.open) {
+        const c = peer.connect(id, { reliable: true });
+        if (c) attach(c);
+      }
+    });
+  }
+
+  function attach(conn) {
+    conn.on("open", () => {
+      conns.set(conn.peer, conn);
+      conn.send({ type: "APP_SYNC_REQ", namespace: NAMESPACE, keys: Array.from(cache.keys()) });
+    });
+    conn.on("data", (d) => {
+      if (!d) return;
+      if (d.type === "NEXA_HELLO" && d.directory) {
+        Object.keys(d.directory).forEach(s => servers.add(s));
+        dialServers();
+      }
+      if (d.type === "APP_DATA_PUSH" && d.namespace === NAMESPACE && d.record) {
+        cache.set(d.record.key, d.record);
+        callbacks.forEach(fn => fn(d.record));
+      }
+    });
+    conn.on("close", () => conns.delete(conn.peer));
+  }
+
+  window.OnNexaClient = {
+    namespace: NAMESPACE,
+    save: function(key, value) {
+      const record = { key, value, ts: Date.now() };
+      cache.set(key, record);
+      conns.forEach(c => { if (c && c.open) c.send({ type: "APP_DATA_PUSH", namespace: NAMESPACE, record }); });
+    },
+    get: function(key) { return cache.has(key) ? cache.get(key).value : null; },
+    getAll: function() { const o = {}; cache.forEach((v, k) => o[k] = v.value); return o; },
+    onData: function(fn) { if (typeof fn === "function") callbacks.push(fn); }
+  };
+
+  boot();
+})();`;
+
+      const blob = new Blob([code], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${slug}-nexa-client.js`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
+    }
+
+    initDatabase().then(() => {
+      refreshHomeMetricsUI();
+      ensureNetworkRunning();
+    });
+  </script>
+</body>
+</html>
