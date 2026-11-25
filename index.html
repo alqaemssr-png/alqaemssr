@@ -21,7 +21,6 @@
       border-right: 1px solid #ccc;
     }
 
-    /* اوپر والا ہیڈر: گول تصویر اور Name */
     header {
       background: #1a73e8;
       color: #fff;
@@ -47,10 +46,17 @@
       border: 2px solid #bbdefb;
     }
     .header-info { flex: 1; }
-    .header-name { font-size: 17px; font-weight: bold; }
+    .header-name { font-size: 17px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+    .server-badge {
+      background: #ff9800;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: none;
+    }
     .header-status { font-size: 12px; color: #e8f0fe; margin-top: 2px; }
 
-    /* مرکزی اسکرینز */
     main {
       flex: 1;
       overflow-y: auto;
@@ -61,7 +67,6 @@
     .tab-page { display: none; flex: 1; flex-direction: column; }
     .tab-page.active { display: flex; }
 
-    /* چیٹ ببلز (تصویر کے مطابق دائیں بائیں) */
     #chatList {
       flex: 1;
       display: flex;
@@ -70,7 +75,7 @@
       overflow-y: auto;
     }
     .bubble {
-      max-width: 76%;
+      max-width: 78%;
       padding: 9px 13px;
       border-radius: 16px;
       font-size: 15px;
@@ -97,28 +102,36 @@
       margin-bottom: 2px;
       display: block;
     }
+    .msg-time {
+      font-size: 10px;
+      color: #777;
+      display: block;
+      text-align: right;
+      margin-top: 3px;
+    }
 
-    /* دیگر ٹیبز کے کارڈز */
     .card {
       background: #fff;
-      padding: 16px;
+      padding: 15px;
       border-radius: 12px;
       margin-bottom: 12px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       direction: rtl;
     }
-    .card h4 { margin-bottom: 8px; color: #1a73e8; }
-    .card input {
+    .card h4 { margin-bottom: 8px; color: #1a73e8; font-size: 16px; }
+    .card p { font-size: 13px; color: #444; line-height: 1.5; margin-bottom: 8px; }
+    .card input[type="text"], .card select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      margin: 8px 0;
+      margin: 6px 0;
       font-size: 15px;
+      background: #fff;
     }
-    .card button {
+    .card button.full-btn {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       background: #1a73e8;
       color: #fff;
       border: none;
@@ -126,9 +139,95 @@
       font-weight: bold;
       font-size: 15px;
       cursor: pointer;
+      margin-top: 4px;
     }
 
-    /* Type بار */
+    /* فائل اپ لوڈ باکس اور فہرست */
+    .upload-box {
+      border: 2px dashed #1a73e8;
+      background: #f8fbff;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+    .upload-box input[type="file"] { display: none; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+    .file-meta { flex: 1; overflow: hidden; }
+    .file-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #111;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-sub { font-size: 11px; color: #666; margin-top: 2px; }
+    .dl-btn {
+      background: #188038;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .dual-btn-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .action-pill {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+    }
+    .action-pill:active { transform: scale(0.97); }
+    .btn-update { background: linear-gradient(135deg, #0d9488, #0f766e); }
+    .btn-install { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f1f6fe;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+      font-weight: bold;
+      color: #174ea6;
+    }
+    .toggle-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+    }
+
     .type-bar {
       background: #f0f2f5;
       padding: 8px 10px;
@@ -161,7 +260,6 @@
       flex-shrink: 0;
     }
 
-    /* نیچے 4 آئیکنز والا فوٹر */
     footer {
       background: #ffffff;
       border-top: 1px solid #d0d7de;
@@ -178,7 +276,6 @@
       justify-content: center;
       cursor: pointer;
       color: #5f6368;
-      transition: 0.2s;
     }
     .nav-btn:last-child { border-right: none; }
     .nav-btn.active { color: #1a73e8; background: #f1f6fe; }
@@ -187,40 +284,87 @@
 </head>
 <body>
 
-  <!-- ہیڈر: گول تصویر + Name -->
   <header>
     <div class="avatar" id="avatarLetter">A</div>
     <div class="header-info">
-      <div class="header-name" id="headerName">ALQAEM</div>
+      <div class="header-name">
+        <span id="headerName">ALQAEM</span>
+        <span class="server-badge" id="serverBadge">SERVER</span>
+      </div>
       <div class="header-status" id="status">نیٹ ورک سے جڑ رہا ہے...</div>
     </div>
   </header>
 
-  <!-- مرکزی حصہ -->
   <main>
-    <!-- ٹیب 1: میسجز (چیٹ) -->
+    <!-- ٹیب 1: میسجز -->
     <section id="tab-chat" class="tab-page active">
       <div id="chatList"></div>
     </section>
 
-    <!-- ٹیب 2: ہوم (نیٹ ورک اسٹیٹس) -->
+    <!-- ٹیب 2: ہوم پیج (نیٹ ورک + فائل اسٹوریج اور ڈاؤن لوڈ) -->
     <section id="tab-home" class="tab-page">
       <div class="card">
         <h4>ALQAEM لائیو نیٹ ورک</h4>
-        <p id="netDetail">خودکار P2P سسٹم فعال ہے۔ کسی کوڈ یا دستی سیٹ اپ کی ضرورت نہیں۔</p>
+        <p id="netDetail">نیٹ ورک کی معلومات لوڈ ہو رہی ہیں...</p>
+        <p id="vaultStats" style="color:#188038; font-weight:bold; margin-bottom:0;"></p>
       </div>
+
       <div class="card">
-        <h4>ایپ انسٹال کریں</h4>
-        <p style="font-size:14px; color:#555; margin-bottom:8px;">ہوم اسکرین پر ایپ شامل کرنے کے لیے براؤزر کے مینو (⋮) سے Install app منتخب کریں۔</p>
+        <h4>📁 فائلیں سرور پر محفوظ کریں (Upload)</h4>
+        <p>تصویر، ویڈیو، PDF یا کوئی بھی فائل منتخب کریں۔ یہ سرور موبائلز پر محفوظ ہو جائے گی اور ہر نئے یوزر کو ڈاؤن لوڈ کے لیے ملے گی:</p>
+        <label class="upload-box" for="filePicker">
+          <div style="font-size:24px; margin-bottom:4px;">📤</div>
+          <div style="font-weight:bold; color:#1a73e8;">فائل منتخب کرنے کے لیے یہاں دبائیں</div>
+          <div style="font-size:11px; color:#666; margin-top:3px;">تصویر، ویڈیو، آڈیو یا دستاویز (زیادہ سے زیادہ 15 MB)</div>
+          <input type="file" id="filePicker" onchange="handleFileUpload(this)">
+        </label>
+        <div id="uploadStatus" style="font-size:13px; font-weight:bold; color:#e37400; text-align:center;"></div>
+      </div>
+
+      <div class="card">
+        <h4>📥 سرور پر موجود فائلیں (Downloads)</h4>
+        <div id="fileListContainer">
+          <p style="color:#777;">ابھی تک کوئی فائل اپ لوڈ نہیں ہوئی۔</p>
+        </div>
       </div>
     </section>
 
     <!-- ٹیب 3: سیٹنگز -->
     <section id="tab-settings" class="tab-page">
       <div class="card">
-        <h4>چیٹ صاف کریں</h4>
-        <p style="font-size:14px; color:#555; margin-bottom:8px;">اسکرین سے تمام پرانے پیغامات ہٹائیں۔</p>
-        <button style="background:#d93025;" onclick="clearChat()">چیٹ صاف کریں</button>
+        <h4>ایپ کنٹرول (App Control)</h4>
+        <div class="dual-btn-row">
+          <button class="action-pill btn-update" onclick="forceUpdateApp()">
+            <span>🔄</span>
+            <span>اپ ڈیٹ کریں</span>
+          </button>
+          <button class="action-pill btn-install" onclick="installPwaApp()">
+            <span>📲</span>
+            <span>انسٹال کریں</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>سرور سیٹنگز (Store & Forward)</h4>
+        <p>سرور موبائل تمام پیغامات اور فائلیں محفوظ (Hold) رکھتا ہے اور بعد میں جڑنے والے موبائلز کو خودکار فراہم کرتا ہے:</p>
+        <div class="toggle-row">
+          <span>اس موبائل کو سرور بنائیں</span>
+          <input type="checkbox" id="isServerToggle" onchange="saveServerSettings()">
+        </div>
+        <label style="font-size:13px; font-weight:bold;">سرور سلاٹ منتخب کریں:</label>
+        <select id="serverSlotSelect" onchange="saveServerSettings()">
+          <option value="1">سرور نمبر 1 (Primary Server)</option>
+          <option value="2">سرور نمبر 2 (Backup Server 2)</option>
+          <option value="3">سرور نمبر 3 (Backup Server 3)</option>
+          <option value="4">سرور نمبر 4 (Backup Server 4)</option>
+          <option value="5">سرور نمبر 5 (Backup Server 5)</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h4>ڈیٹا اور اسٹوریج مینجمنٹ</h4>
+        <button class="full-btn" style="background:#d93025;" onclick="clearAllData()">تمام محفوظ میسجز اور فائلیں صاف کریں</button>
       </div>
     </section>
 
@@ -228,20 +372,18 @@
     <section id="tab-profile" class="tab-page">
       <div class="card">
         <h4>میرا نام (Profile Name)</h4>
-        <p style="font-size:14px; color:#555;">یہ نام ہیڈر اور آپ کے پیغامات کے ساتھ نظر آئے گا:</p>
+        <p>یہ نام ہیڈر اور آپ کے بھیجے گئے پیغامات اور فائلوں کے ساتھ ظاہر ہوگا:</p>
         <input type="text" id="profileInput" placeholder="اپنا نام لکھیں (مثلاً: Director)">
-        <button onclick="saveProfile()">نام محفوظ کریں</button>
+        <button class="full-btn" onclick="saveProfile()">نام محفوظ کریں</button>
       </div>
     </section>
   </main>
 
-  <!-- Type بار -->
   <div class="type-bar" id="typeBar">
     <input type="text" id="msgInput" placeholder="Type..." onkeypress="if(event.key==='Enter') sendMsg()">
     <button class="send-btn" onclick="sendMsg()">➤</button>
   </div>
 
-  <!-- فوٹر: 4 آئیکنز (لفافہ، گھر، سیٹنگز، پروفائل) -->
   <footer>
     <button class="nav-btn active" onclick="switchTab('chat', this)" title="Messages">
       <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
@@ -259,14 +401,177 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
+      navigator.serviceWorker.register('./sw.js').then(reg => reg.update());
     }
 
-    // پروفائل نام لوڈ کریں
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    async function installPwaApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      } else if (window.matchMedia('(display-mode: standalone)').matches) {
+        alert("ALQAEM ایپ آپ کے موبائل میں پہلے ہی انسٹال ہے۔");
+      } else {
+        alert("ایپ انسٹال کرنے کے لیے Chrome کے اوپر دائیں کونے میں تین نقطوں (⋮) پر کلک کریں اور 'Add to Home screen' یا 'Install app' منتخب کریں۔");
+      }
+    }
+
+    async function forceUpdateApp() {
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (let r of regs) await r.unregister();
+      }
+      window.location.href = window.location.pathname + '?v=' + Date.now();
+    }
+
+    // IndexedDB بڑی فائلوں (تصاویر، ویڈیوز، PDFs) کو محفوظ رکھنے کے لیے
+    let db = null;
+    let fileVault = [];
+    const seenFiles = new Set();
+
+    function initFileDB() {
+      return new Promise((resolve) => {
+        const req = indexedDB.open('AlqaemFilesDB', 1);
+        req.onupgradeneeded = (e) => {
+          const d = e.target.result;
+          if (!d.objectStoreNames.contains('files')) {
+            d.createObjectStore('files', { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = (e) => {
+          db = e.target.result;
+          const tx = db.transaction('files', 'readonly');
+          const store = tx.objectStore('files');
+          const getAll = store.getAll();
+          getAll.onsuccess = () => {
+            fileVault = getAll.result || [];
+            fileVault.forEach(f => seenFiles.add(f.id));
+            renderFileList();
+            updateStatsUI();
+            resolve();
+          };
+        };
+        req.onerror = () => resolve();
+      });
+    }
+
+    function saveFileToDB(fileObj) {
+      if (seenFiles.has(fileObj.id)) return;
+      seenFiles.add(fileObj.id);
+      fileVault.push(fileObj);
+      if (db) {
+        const tx = db.transaction('files', 'readwrite');
+        tx.objectStore('files').put(fileObj);
+      }
+      renderFileList();
+      updateStatsUI();
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function renderFileList() {
+      const container = document.getElementById('fileListContainer');
+      if (fileVault.length === 0) {
+        container.innerHTML = '<p style="color:#777;">ابھی تک کوئی فائل اپ لوڈ نہیں ہوئی۔</p>';
+        return;
+      }
+      container.innerHTML = '';
+      // تازہ ترین فائلیں سب سے اوپر دکھائیں
+      [...fileVault].reverse().forEach(f => {
+        const row = document.createElement('div');
+        row.className = 'file-item';
+
+        const meta = document.createElement('div');
+        meta.className = 'file-meta';
+        meta.innerHTML = `
+          <div class="file-name">${escapeHtml(f.name)}</div>
+          <div class="file-sub">${formatBytes(f.size)} • منجانب: ${escapeHtml(f.sender || 'ALQAEM')}</div>
+        `;
+
+        const btn = document.createElement('button');
+        btn.className = 'dl-btn';
+        btn.innerText = '⬇️ ڈاؤن لوڈ';
+        btn.onclick = () => downloadStoredFile(f);
+
+        row.appendChild(meta);
+        row.appendChild(btn);
+        container.appendChild(row);
+      });
+    }
+
+    function downloadStoredFile(f) {
+      const a = document.createElement('a');
+      a.href = f.dataUrl;
+      a.download = f.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      if (file.size > 15 * 1024 * 1024) {
+        alert("فائل کا سائز 15 MB سے کم ہونا چاہیے تاکہ P2P نیٹ ورک پر آسانی سے منتقل ہو سکے۔");
+        input.value = '';
+        return;
+      }
+
+      const statusDiv = document.getElementById('uploadStatus');
+      statusDiv.innerText = "فائل تیار ہو رہی ہے...";
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fileObj = {
+          id: 'file-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          sender: myName,
+          dataUrl: reader.result
+        };
+
+        saveFileToDB(fileObj);
+        broadcast({ type: 'FILE_UPLOAD', file: fileObj });
+        statusDiv.style.color = '#188038';
+        statusDiv.innerText = `✅ "${file.name}" سرور نیٹ ورک پر بھیج دی گئی!`;
+        input.value = '';
+        setTimeout(() => { statusDiv.innerText = ''; }, 4000);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // پروفائل اور سرور سیٹنگز
     let myName = localStorage.getItem('alqaem_profile_name') || 'ALQAEM';
+    let isServerMode = localStorage.getItem('alqaem_is_server') === 'true';
+    let myServerSlot = localStorage.getItem('alqaem_server_slot') || '1';
+    let messageVault = JSON.parse(localStorage.getItem('alqaem_msg_vault') || '[]');
+
     document.getElementById('headerName').innerText = myName;
     document.getElementById('avatarLetter').innerText = myName.charAt(0).toUpperCase();
     document.getElementById('profileInput').value = myName === 'ALQAEM' ? '' : myName;
+    document.getElementById('isServerToggle').checked = isServerMode;
+    document.getElementById('serverSlotSelect').value = myServerSlot;
+    document.getElementById('serverBadge').style.display = isServerMode ? 'inline-block' : 'none';
 
     function saveProfile() {
       const val = document.getElementById('profileInput').value.trim() || 'ALQAEM';
@@ -277,21 +582,49 @@
       switchTab('chat', document.querySelector('.nav-btn'));
     }
 
+    function saveServerSettings() {
+      isServerMode = document.getElementById('isServerToggle').checked;
+      myServerSlot = document.getElementById('serverSlotSelect').value;
+      localStorage.setItem('alqaem_is_server', isServerMode);
+      localStorage.setItem('alqaem_server_slot', myServerSlot);
+      document.getElementById('serverBadge').style.display = isServerMode ? 'inline-block' : 'none';
+      startNetwork();
+    }
+
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       btn.classList.add('active');
       document.getElementById('typeBar').style.display = (tab === 'chat') ? 'flex' : 'none';
+      updateStatsUI();
     }
 
-    function clearChat() {
+    function clearAllData() {
+      messageVault = [];
+      seenMsgs.clear();
+      localStorage.setItem('alqaem_msg_vault', '[]');
       document.getElementById('chatList').innerHTML = '';
+
+      fileVault = [];
+      seenFiles.clear();
+      if (db) {
+        const tx = db.transaction('files', 'readwrite');
+        tx.objectStore('files').clear();
+      }
+      renderFileList();
+      updateStatsUI();
       switchTab('chat', document.querySelector('.nav-btn'));
     }
 
-    // خودکار P2P Mesh نیٹ ورک
-    const HUB_ID = 'alqaem-rattowal-global-hub-v1';
+    const SERVER_IDS = [
+      'alqaem-rattowal-srv-1',
+      'alqaem-rattowal-srv-2',
+      'alqaem-rattowal-srv-3',
+      'alqaem-rattowal-srv-4',
+      'alqaem-rattowal-srv-5'
+    ];
+
     const PEER_CONFIG = {
       config: {
         iceServers: [
@@ -302,89 +635,174 @@
     };
 
     let peer = null;
-    let isHub = false;
-    let connections = [];
+    let connections = new Map();
     const seenMsgs = new Set();
 
-    const statusEl = document.getElementById('status');
-    const netDetailEl = document.getElementById('netDetail');
-    const chatList = document.getElementById('chatList');
+    messageVault.forEach(pkt => {
+      seenMsgs.add(pkt.id);
+      renderBubble(pkt, pkt.senderId === getDeviceId());
+    });
 
-    function updateStatus() {
-      const count = connections.filter(c => c && c.open).length;
-      if (isHub) {
-        statusEl.innerText = count > 0 ? `آن لائن (${count} جڑے ہوئے)` : `آن لائن (انتظار...)`;
-        netDetailEl.innerText = `یہ ڈیوائس مرکزی نوڈ (Hub) ہے۔ جڑے ہوئے موبائلز: ${count}`;
-      } else {
-        statusEl.innerText = count > 0 ? `نیٹ ورک سے جڑ گیا` : `رابطہ ہو رہا ہے...`;
-        netDetailEl.innerText = count > 0 ? `ALQAEM نیٹ ورک سے کامیابی سے جڑا ہوا ہے۔` : `مرکزی نوڈ تلاش کیا جا رہا ہے...`;
+    function getDeviceId() {
+      let id = localStorage.getItem('alqaem_device_uid');
+      if (!id) {
+        id = 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+        localStorage.setItem('alqaem_device_uid', id);
       }
+      return id;
+    }
+
+    function updateStatsUI() {
+      const activeCount = Array.from(connections.values()).filter(c => c && c.open).length;
+      const statusEl = document.getElementById('status');
+      const netDetailEl = document.getElementById('netDetail');
+      const vaultStatsEl = document.getElementById('vaultStats');
+
+      if (isServerMode) {
+        statusEl.innerText = `سرور #${myServerSlot} فعال | ${activeCount} ڈیوائسز جڑی ہیں`;
+        netDetailEl.innerText = `یہ موبائل بطور سرور #${myServerSlot} تمام پیغامات اور فائلیں محفوظ کر کے نئے آنے والوں کو فراہم کر رہا ہے۔`;
+      } else {
+        statusEl.innerText = activeCount > 0 ? `نیٹ ورک سے جڑ گیا (${activeCount} سرور/نوڈ)` : `سرور تلاش کر رہا ہے...`;
+        netDetailEl.innerText = activeCount > 0 ? `آپ ALQAEM سرور نیٹ ورک سے جڑے ہوئے ہیں۔` : `ابھی کوئی آن لائن سرور دستیاب نہیں، خودکار کوشش جاری ہے...`;
+      }
+      vaultStatsEl.innerText = `محفوظ میسجز: ${messageVault.length} | محفوظ فائلیں: ${fileVault.length}`;
     }
 
     function startNetwork() {
       if (peer) peer.destroy();
-      connections = [];
-      isHub = false;
-      peer = new Peer(HUB_ID, PEER_CONFIG);
+      connections.clear();
 
-      peer.on('open', () => { isHub = true; updateStatus(); });
-      peer.on('connection', (conn) => registerConn(conn));
+      const myPeerId = isServerMode ? `alqaem-rattowal-srv-${myServerSlot}` : undefined;
+      peer = myPeerId ? new Peer(myPeerId, PEER_CONFIG) : new Peer(PEER_CONFIG);
+
+      peer.on('open', () => {
+        updateStatsUI();
+        connectToAllServers();
+      });
+
+      peer.on('connection', (conn) => setupConnection(conn));
+
       peer.on('error', (err) => {
-        if (err.type === 'unavailable-id') joinAsMember();
-        else setTimeout(startNetwork, 3000);
+        if (err.type === 'unavailable-id' && isServerMode) {
+          alert(`سرور نمبر ${myServerSlot} پہلے سے کسی دوسرے موبائل پر فعال ہے۔ سیٹنگز میں جا کر کوئی دوسرا سرور نمبر منتخب کریں۔`);
+        } else {
+          setTimeout(startNetwork, 4000);
+        }
       });
     }
 
-    function joinAsMember() {
-      if (peer) peer.destroy();
-      isHub = false;
-      peer = new Peer(PEER_CONFIG);
-      peer.on('open', () => connectToHub());
-      peer.on('error', () => setTimeout(startNetwork, 3000));
+    function connectToAllServers() {
+      if (!peer || !peer.open) return;
+      SERVER_IDS.forEach(srvId => {
+        if (srvId === peer.id) return;
+        const existing = connections.get(srvId);
+        if (!existing || !existing.open) {
+          const conn = peer.connect(srvId, { reliable: true });
+          setupConnection(conn);
+        }
+      });
     }
 
-    function connectToHub() {
-      if (isHub || !peer || !peer.open) return;
-      if (connections.some(c => c && c.open)) return;
-      registerConn(peer.connect(HUB_ID, { reliable: true }));
-    }
-
-    function registerConn(conn) {
+    function setupConnection(conn) {
       conn.on('open', () => {
-        if (!connections.includes(conn)) connections.push(conn);
-        updateStatus();
+        connections.set(conn.peer, conn);
+        updateStatsUI();
+
+        // پرانے پیغامات سنک کریں
+        if (messageVault.length > 0) {
+          conn.send({ type: 'SYNC_BATCH', messages: messageVault.slice(-100) });
+        }
+        // تمام محفوظ فائلیں نئے جڑنے والے کو بھیجیں
+        fileVault.forEach(f => {
+          conn.send({ type: 'FILE_UPLOAD', file: f });
+        });
       });
-      conn.on('data', (packet) => {
-        if (!packet || !packet.id || seenMsgs.has(packet.id)) return;
-        seenMsgs.add(packet.id);
-        appendBubble(packet.text, false, packet.sender);
-        if (isHub) broadcast(packet, conn);
+
+      conn.on('data', (data) => {
+        if (!data) return;
+
+        // نئی یا سنک ہونے والی فائل وصول کریں
+        if (data.type === 'FILE_UPLOAD' && data.file && data.file.id) {
+          if (!seenFiles.has(data.file.id)) {
+            saveFileToDB(data.file);
+            if (isServerMode) {
+              broadcast({ type: 'FILE_UPLOAD', file: data.file }, conn.peer);
+            }
+          }
+          return;
+        }
+
+        if (data.type === 'SYNC_BATCH' && Array.isArray(data.messages)) {
+          let addedNew = false;
+          data.messages.forEach(pkt => {
+            if (pkt && pkt.id && !seenMsgs.has(pkt.id)) {
+              seenMsgs.add(pkt.id);
+              storePacket(pkt);
+              renderBubble(pkt, pkt.senderId === getDeviceId());
+              addedNew = true;
+            }
+          });
+          if (isServerMode && addedNew) {
+            broadcast({ type: 'SYNC_BATCH', messages: messageVault.slice(-100) }, conn.peer);
+          }
+          return;
+        }
+
+        if (data.type === 'MSG' && data.packet && !seenMsgs.has(data.packet.id)) {
+          const pkt = data.packet;
+          seenMsgs.add(pkt.id);
+          storePacket(pkt);
+          renderBubble(pkt, pkt.senderId === getDeviceId());
+          if (isServerMode) {
+            broadcast({ type: 'MSG', packet: pkt }, conn.peer);
+          }
+        }
       });
+
       conn.on('close', () => {
-        connections = connections.filter(c => c !== conn);
-        updateStatus();
-        if (!isHub) setTimeout(startNetwork, 1500);
+        connections.delete(conn.peer);
+        updateStatsUI();
       });
     }
 
-    function broadcast(packet, excludeConn = null) {
-      connections.forEach(c => {
-        if (c && c.open && c !== excludeConn) c.send(packet);
+    function storePacket(pkt) {
+      messageVault.push(pkt);
+      if (messageVault.length > 200) messageVault = messageVault.slice(-200);
+      localStorage.setItem('alqaem_msg_vault', JSON.stringify(messageVault));
+      updateStatsUI();
+    }
+
+    function broadcast(payload, excludePeerId = null) {
+      connections.forEach((conn, peerId) => {
+        if (conn && conn.open && peerId !== excludePeerId) {
+          conn.send(payload);
+        }
       });
     }
 
-    function appendBubble(text, isMe, sender) {
+    function renderBubble(pkt, isMe) {
+      const chatList = document.getElementById('chatList');
       const div = document.createElement('div');
       div.className = 'bubble ' + (isMe ? 'me' : 'them');
-      if (!isMe && sender && sender !== 'ALQAEM') {
+
+      if (!isMe && pkt.sender) {
         const tag = document.createElement('span');
         tag.className = 'sender-tag';
-        tag.innerText = sender;
+        tag.innerText = pkt.sender;
         div.appendChild(tag);
       }
+
       const txt = document.createElement('span');
-      txt.innerText = text;
+      txt.innerText = pkt.text;
       div.appendChild(txt);
+
+      if (pkt.time) {
+        const tm = document.createElement('span');
+        tm.className = 'msg-time';
+        tm.innerText = pkt.time;
+        div.appendChild(tm);
+      }
+
       chatList.appendChild(div);
       chatList.scrollTop = chatList.scrollHeight;
     }
@@ -394,25 +812,29 @@
       const text = inp.value.trim();
       if (!text) return;
 
-      const openConns = connections.filter(c => c && c.open);
-      if (openConns.length === 0) {
-        alert("ابھی کوئی دوسرا موبائل آن لائن نہیں جڑا۔");
-        return;
-      }
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
-      const packet = {
+      const pkt = {
         id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+        senderId: getDeviceId(),
+        sender: myName,
         text: text,
-        sender: myName
+        time: timeStr
       };
-      seenMsgs.add(packet.id);
-      appendBubble(text, true, myName);
-      broadcast(packet);
+
+      seenMsgs.add(pkt.id);
+      storePacket(pkt);
+      renderBubble(pkt, true);
+      broadcast({ type: 'MSG', packet: pkt });
       inp.value = "";
     }
 
-    setInterval(() => { if (!isHub) connectToHub(); }, 4000);
-    startNetwork();
+    setInterval(connectToAllServers, 5000);
+    initFileDB().then(() => {
+      updateStatsUI();
+      startNetwork();
+    });
   </script>
 </body>
 </html>
