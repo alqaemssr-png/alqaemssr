@@ -1,8 +1,12 @@
-const CACHE_NAME = 'on-nexa-server-v4';
+const CACHE_NAME = 'on-nexa-server-v5';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './nexa-core.js',
+  './nexa-sync.js',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
