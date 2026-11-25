@@ -37,7 +37,6 @@
       border-right: 1px solid #cbd5e1;
     }
 
-    /* فکس ہیڈر */
     header {
       flex-shrink: 0;
       background: linear-gradient(135deg, var(--indigo-dark) 0%, var(--indigo-mid) 65%, #3730a3 100%);
@@ -49,465 +48,86 @@
       box-shadow: 0 3px 12px rgba(30, 27, 75, 0.25);
       z-index: 20;
     }
-    .brand-wrap {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-    .nexa-logo {
-      width: 38px;
-      height: 38px;
-      flex-shrink: 0;
-      filter: drop-shadow(0 2px 6px rgba(34, 211, 238, 0.35));
-    }
-    .brand-titles {
-      display: flex;
-      flex-direction: column;
-    }
-    .brand-name {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .brand-sub {
-      font-size: 10px;
-      letter-spacing: 1.4px;
-      color: var(--cyan-bright);
-      font-weight: 600;
-      margin-top: 1px;
-    }
-    .admin-pill-badge {
-      background: rgba(34, 211, 238, 0.2);
-      border: 1px solid var(--cyan-bright);
-      color: var(--cyan-bright);
-      font-size: 9px;
-      padding: 1px 6px;
-      border-radius: 10px;
-      display: none;
-    }
-    .header-live-dot {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.12);
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #94a3b8;
-    }
+    .brand-wrap { display: flex; align-items: center; gap: 11px; }
+    .nexa-logo { width: 38px; height: 38px; flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(34, 211, 238, 0.35)); }
+    .brand-titles { display: flex; flex-direction: column; }
+    .brand-name { font-size: 16px; font-weight: 800; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px; }
+    .brand-sub { font-size: 10px; letter-spacing: 1.4px; color: var(--cyan-bright); font-weight: 600; margin-top: 1px; }
+    .admin-pill-badge { background: rgba(34, 211, 238, 0.2); border: 1px solid var(--cyan-bright); color: var(--cyan-bright); font-size: 9px; padding: 1px 6px; border-radius: 10px; display: none; }
+    .header-live-dot { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.12); padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; }
     .dot.active { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
     .dot.inactive { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
     .dot.disconnected { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
 
-    /* درمیان والا اسکرول ایبل حصہ */
-    main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .page-view {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      padding-bottom: 10px;
-    }
-    .page-view.active {
-      display: flex;
-    }
+    main { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .page-view { display: none; flex-direction: column; gap: 12px; padding-bottom: 10px; }
+    .page-view.active { display: flex; }
 
-    /* کارڈز اور اسٹیٹس */
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
-      border: 1px solid var(--border-soft);
-      direction: rtl;
-    }
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--indigo-dark);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
+    .card { background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05); border: 1px solid var(--border-soft); direction: rtl; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--indigo-dark); display: flex; align-items: center; gap: 7px; }
 
-    /* ہوم اسکرین سرور ہیرو کارڈ */
-    .server-hero {
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border: 1px solid #cbd5e1;
-      border-top: 4px solid var(--purple-accent);
-    }
-    .server-name-display {
-      font-size: 19px;
-      font-weight: 800;
-      color: var(--indigo-dark);
-    }
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 800;
-    }
+    .server-hero { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #cbd5e1; border-top: 4px solid var(--purple-accent); }
+    .server-name-display { font-size: 19px; font-weight: 800; color: var(--indigo-dark); }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; }
     .st-active { background: #dcfce7; color: #15803d; }
     .st-inactive { background: #fef3c7; color: #b45309; }
     .st-disconnected { background: #fee2e2; color: #b91c1c; }
 
-    /* ہوم اسکرین میٹرکس لسٹ */
-    .metric-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .metric-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f8fafc;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      font-size: 13px;
-    }
-    .metric-label {
-      color: var(--text-sub);
-      font-weight: 600;
-    }
-    .metric-val {
-      font-weight: 800;
-      color: var(--indigo-dark);
-      direction: ltr;
-    }
+    .metric-list { display: flex; flex-direction: column; gap: 8px; }
+    .metric-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 13px; }
+    .metric-label { color: var(--text-sub); font-weight: 600; }
+    .metric-val { font-weight: 800; color: var(--indigo-dark); direction: ltr; }
 
-    /* میموری اور بیٹری سلیکشن */
-    .control-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .control-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px;
-    }
-    .control-box label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--indigo-dark);
-      margin-bottom: 6px;
-    }
-    select, input[type="text"], input[type="password"], input[type="tel"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      font-size: 14px;
-      background: #fff;
-      color: var(--text-main);
-      outline: none;
-    }
-    select:focus, input:focus {
-      border-color: var(--purple-accent);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
-    }
+    .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .control-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; }
+    .control-box label { display: block; font-size: 12px; font-weight: 700; color: var(--indigo-dark); margin-bottom: 6px; }
+    select, input[type="text"], input[type="password"], input[type="tel"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; color: var(--text-main); outline: none; }
+    select:focus, input:focus { border-color: var(--purple-accent); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12); }
 
-    .btn-primary {
-      width: 100%;
-      padding: 11px 14px;
-      background: linear-gradient(135deg, var(--purple-accent), var(--indigo-mid));
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
-    }
+    .btn-primary { width: 100%; padding: 11px 14px; background: linear-gradient(135deg, var(--purple-accent), var(--indigo-mid)); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25); }
     .btn-primary:active { transform: scale(0.98); }
 
-    /* پروفائل اسکرین */
-    .profile-top-bar {
-      display: flex;
-      justify-content: flex-end; /* RTL میں بائیں کونے کے لیے flex-end */
-      align-items: center;
-      min-height: 24px;
-      margin-bottom: 4px;
-    }
-    .more-options-link {
-      color: #2563eb;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      background: none;
-      border: none;
-      padding: 2px 4px;
-    }
-    .logout-link {
-      color: #dc2626;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 2px 4px;
-    }
-    .dp-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      margin: 8px 0 14px;
-    }
-    .dp-circle {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--cyan-bright), var(--purple-accent));
-      color: #fff;
-      font-size: 32px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border: 3px solid #fff;
-      box-shadow: 0 4px 12px rgba(30, 27, 75, 0.18);
-      cursor: pointer;
-    }
-    .dp-circle img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .dp-hint {
-      font-size: 12px;
-      color: #2563eb;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .profile-top-bar { display: flex; justify-content: flex-end; align-items: center; min-height: 24px; margin-bottom: 4px; }
+    .more-options-link { color: #2563eb; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; background: none; border: none; padding: 2px 4px; }
+    .logout-link { color: #dc2626; font-size: 12px; font-weight: 700; cursor: pointer; background: none; border: none; padding: 2px 4px; }
+    .dp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 8px 0 14px; }
+    .dp-circle { width: 86px; height: 86px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan-bright), var(--purple-accent)); color: #fff; font-size: 32px; font-weight: 800; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.18); cursor: pointer; }
+    .dp-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .dp-hint { font-size: 12px; color: #2563eb; font-weight: 600; cursor: pointer; }
 
-    /* ایڈمن سیٹنگز ٹیبز */
-    .admin-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      background: #e2e8f0;
-      padding: 4px;
-      border-radius: 12px;
-      direction: rtl;
-    }
-    .admin-tab-btn {
-      padding: 9px 6px;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      color: var(--text-sub);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .admin-tab-btn.active {
-      background: #fff;
-      color: var(--indigo-dark);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
+    .admin-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #e2e8f0; padding: 4px; border-radius: 12px; direction: rtl; }
+    .admin-tab-btn { padding: 9px 6px; border: none; border-radius: 9px; background: transparent; color: var(--text-sub); font-size: 12px; font-weight: 700; cursor: pointer; }
+    .admin-tab-btn.active { background: #fff; color: var(--indigo-dark); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 
-    /* سرور لسٹ پٹیاں (Strips) */
-    .server-strip {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      direction: rtl;
-    }
-    .strip-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .strip-name {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--indigo-dark);
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .strip-meta-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 10px;
-      font-size: 11px;
-      color: var(--text-sub);
-    }
-    .strip-pill {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
-    .strip-gear-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      color: var(--indigo-dark);
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+    .server-strip { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; direction: rtl; }
+    .strip-info { flex: 1; min-width: 0; }
+    .strip-name { font-size: 14px; font-weight: 800; color: var(--indigo-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .strip-meta-grid { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: 11px; color: var(--text-sub); }
+    .strip-pill { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; font-weight: 600; }
+    .strip-gear-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid #cbd5e1; background: #f8fafc; color: var(--indigo-dark); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    /* ایپ چینل کنسول کارڈ */
-    .console-app-box {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-    .ns-badge {
-      background: #e0e7ff;
-      color: #3730a3;
-      font-family: monospace;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 6px;
-      direction: ltr;
-    }
-    .link-box {
-      background: #0f172a;
-      color: var(--cyan-bright);
-      font-family: monospace;
-      font-size: 11px;
-      padding: 8px;
-      border-radius: 8px;
-      direction: ltr;
-      text-align: left;
-      overflow-x: auto;
-      margin: 6px 0;
-    }
-    .dual-btn {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .btn-sm {
-      padding: 8px;
-      border: none;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-    }
+    .console-app-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+    .ns-badge { background: #e0e7ff; color: #3730a3; font-family: monospace; font-size: 11px; padding: 2px 6px; border-radius: 6px; direction: ltr; }
+    .link-box { background: #0f172a; color: var(--cyan-bright); font-family: monospace; font-size: 11px; padding: 8px; border-radius: 8px; direction: ltr; text-align: left; overflow-x: auto; margin: 6px 0; }
+    .dual-btn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .btn-sm { padding: 8px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; }
 
-    /* ایپ ٹک لسٹ (Link to Application) */
-    .app-check-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      margin-bottom: 6px;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .app-check-row input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--purple-accent);
-    }
+    .app-check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+    .app-check-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--purple-accent); }
 
-    /* فکس فوٹر */
-    footer {
-      flex-shrink: 0;
-      background: #ffffff;
-      border-top: 1px solid #cbd5e1;
-      display: flex;
-      direction: rtl; /* دائیں سے بائیں ترتیب: پروفائل -> سیٹنگز -> ہوم */
-      height: 60px;
-      box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.06);
-      z-index: 20;
-    }
-    .footer-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      color: #64748b;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      position: relative;
-    }
-    .footer-btn.active {
-      color: var(--purple-accent);
-      background: #f5f3ff;
-    }
-    .footer-btn.active::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 20%;
-      right: 20%;
-      height: 3px;
-      background: var(--purple-accent);
-      border-radius: 0 0 4px 4px;
-    }
-    .footer-btn svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
-    }
+    footer { flex-shrink: 0; background: #ffffff; border-top: 1px solid #cbd5e1; display: flex; direction: rtl; height: 60px; box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.06); z-index: 20; }
+    .footer-btn { flex: 1; background: none; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #64748b; font-size: 11px; font-weight: 700; cursor: pointer; position: relative; }
+    .footer-btn.active { color: var(--purple-accent); background: #f5f3ff; }
+    .footer-btn.active::after { content: ""; position: absolute; top: 0; left: 20%; right: 20%; height: 3px; background: var(--purple-accent); border-radius: 0 0 4px 4px; }
+    .footer-btn svg { width: 22px; height: 22px; fill: currentColor; }
   </style>
 </head>
 <body>
 
-  <!-- فکس ہیڈر -->
   <header>
     <div class="brand-wrap">
-      <!-- ON NEXA جیومیٹرک سیان/انڈیگو لوگو -->
       <svg class="nexa-logo" viewBox="0 0 100 100">
         <defs>
           <linearGradient id="nexaGrad" x1="0" y1="0" x2="1" y2="1">
@@ -533,10 +153,7 @@
     </div>
   </header>
 
-  <!-- اسکرول ایبل مین کنٹینٹ -->
   <main>
-
-    <!-- 1. ہوم پیج (ڈیفالٹ اسکرین) -->
     <section id="view-home" class="page-view active">
       <div class="card server-hero">
         <div class="card-header" style="margin-bottom:8px;">
@@ -616,10 +233,8 @@
       </div>
     </section>
 
-    <!-- 2. پروفائل پیج -->
     <section id="view-profile" class="page-view">
       <div class="card">
-        <!-- اوپر بائیں کونے میں باریک نیلا لنک More Options یا Logout -->
         <div class="profile-top-bar">
           <button class="more-options-link" id="moreOptionsBtn" onclick="openPasscodePage()">More Options</button>
           <button class="logout-link" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">Logout</button>
@@ -638,7 +253,6 @@
         <button class="btn-primary" onclick="saveUserProfile()">پروفائل محفوظ کریں</button>
       </div>
 
-      <!-- صرف ایڈمن لاگ ان ہونے کے بعد پاس کوڈ تبدیل کرنے کا کارڈ -->
       <div class="card" id="adminChangePinCard" style="display:none; border-top:3px solid #0891b2;">
         <div class="card-header">
           <span class="card-title">🔐 ایڈمن پاس کوڈ تبدیل کریں</span>
@@ -649,7 +263,6 @@
       </div>
     </section>
 
-    <!-- 2B. ایڈمن پاس کوڈ لاگ ان پیج (More Options دبانے پر) -->
     <section id="view-passcode" class="page-view">
       <div class="card" style="margin-top:20px; text-align:center;">
         <div style="display:flex; justify-content:flex-start; margin-bottom:10px;">
@@ -661,7 +274,6 @@
       </div>
     </section>
 
-    <!-- 3. ایڈمن سیٹنگز پیج (صرف ایڈمن کے لیے) -->
     <section id="view-settings" class="page-view">
       <div class="admin-tabs">
         <button class="admin-tab-btn active" id="tabBtnOnline" onclick="switchAdminSubTab('online')">آن لائن سرورز</button>
@@ -669,17 +281,14 @@
         <button class="admin-tab-btn" id="tabBtnConsole" onclick="switchAdminSubTab('console')">سرور کنسول</button>
       </div>
 
-      <!-- سب ٹیب 1: آن لائن سرورز -->
       <div id="admin-sub-online">
         <div id="onlineServersContainer"></div>
       </div>
 
-      <!-- سب ٹیب 2: آف لائن سرورز -->
       <div id="admin-sub-offline" style="display:none;">
         <div id="offlineServersContainer"></div>
       </div>
 
-      <!-- سب ٹیب 3: سرور کنسول -->
       <div id="admin-sub-console" style="display:none;">
         <div class="card">
           <div class="card-header">
@@ -700,7 +309,6 @@
       </div>
     </section>
 
-    <!-- 3B. کسی مخصوص سرور کی انفرادی سیٹنگز (گیئر بٹن دبانے پر) -->
     <section id="view-node-detail" class="page-view">
       <div class="card">
         <div class="card-header">
@@ -721,10 +329,8 @@
         <button class="btn-primary" style="background:#0891b2;" onclick="saveNodeLinkedApps()">منسلک ایپس محفوظ کریں</button>
       </div>
     </section>
-
   </main>
 
-  <!-- فکس فوٹر (دائیں سے بائیں: پروفائل -> سیٹنگز [صرف ایڈمن] -> ہوم) -->
   <footer>
     <button class="footer-btn" id="footProfileBtn" onclick="switchView('profile')">
       <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
@@ -743,9 +349,6 @@
   </footer>
 
   <script>
-    // =========================================================
-    // 1. سروس ورکر، WakeLock اور بیک گراؤنڈ پرसिسٹنس
-    // =========================================================
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').then(r => r.update()).catch(() => {});
     }
@@ -768,9 +371,6 @@
     });
     requestWakeLock();
 
-    // =========================================================
-    // 2. اسٹیٹ، پروفائل، ایڈمن کریڈینشلز اور ڈیٹا اسٹرکچر
-    // =========================================================
     function getDeviceUid() {
       let uid = localStorage.getItem('nexa_device_uid');
       if (!uid) {
@@ -791,7 +391,6 @@
     let adminPasscode = localStorage.getItem('nexa_admin_pin') || '10111';
     let isAdmin = sessionStorage.getItem('nexa_is_admin') === 'true';
 
-    // سرور میٹرکس
     let firstOnlineTs = parseInt(localStorage.getItem('nexa_first_online') || Date.now().toString(), 10);
     localStorage.setItem('nexa_first_online', firstOnlineTs.toString());
     let totalOnlineSeconds = parseInt(localStorage.getItem('nexa_total_online_sec') || '0', 10);
@@ -800,20 +399,14 @@
     let bytesReceived = parseInt(localStorage.getItem('nexa_bytes_rx') || '0', 10);
     let bytesSent = parseInt(localStorage.getItem('nexa_bytes_tx') || '0', 10);
 
-    // ایپلیکیشن چینلز (Isolated Namespaces)
     const DEFAULT_APPS = [
       { title: 'Alqaem School System', slug: 'alqaem-school-system' },
       { title: 'Alqaem IT Academy', slug: 'alqaem-it-academy' }
     ];
     let registeredApps = JSON.parse(localStorage.getItem('nexa_registered_apps') || 'null') || DEFAULT_APPS;
-
-    // اس سرور کے ساتھ منسلک ایپس (ڈیفالٹ تمام رجسٹرڈ ایپس)
     let myLinkedApps = JSON.parse(localStorage.getItem('nexa_my_linked_apps') || 'null') || registeredApps.map(a => a.slug);
-
-    // تمام معلوم سرور نوڈز کی ڈائریکٹری (nodeId -> metadata)
     let nodeRegistry = JSON.parse(localStorage.getItem('nexa_node_registry') || '{}');
 
-    // UI ابتدائی سیٹنگ
     document.getElementById('memoryLimitSelect').value = memoryLimitGB;
     document.getElementById('batteryLimitSelect').value = batteryThreshold;
     document.getElementById('profileNameInput').value = userName;
@@ -828,7 +421,6 @@
         dpCircle.innerHTML = `<span id="dpInitial">${userName.charAt(0).toUpperCase()}</span>`;
       }
 
-      // ایڈمن UI کنٹرولز
       document.getElementById('headerAdminBadge').style.display = isAdmin ? 'inline-block' : 'none';
       document.getElementById('footSettingsBtn').style.display = isAdmin ? 'flex' : 'none';
       document.getElementById('moreOptionsBtn').style.display = isAdmin ? 'none' : 'inline-block';
@@ -850,7 +442,6 @@
       }
     }
 
-    // پروفائل محفوظ کریں
     function handleDpUpload(input) {
       const file = input.files[0];
       if (!file) return;
@@ -884,7 +475,6 @@
       }
     }
 
-    // ایڈمن لاگ ان / لاگ آؤٹ / پاس کوڈ تبدیلی
     function openPasscodePage() {
       document.getElementById('passcodeEntryInput').value = '';
       switchView('passcode');
@@ -929,9 +519,6 @@
       evaluateBatteryAndServerState();
     }
 
-    // =========================================================
-    // 3. بیٹری مانیٹرنگ اور آٹو پاز / ریزیوم لاجک
-    // =========================================================
     let currentBatteryPct = 100;
     let isCharging = true;
     let isPausedByBattery = false;
@@ -941,669 +528,4 @@
         const updateBat = () => {
           currentBatteryPct = Math.round(bat.level * 100);
           isCharging = bat.charging;
-          document.getElementById('currentBatteryText').innerText = `${currentBatteryPct}% ${isCharging ? '⚡' : ''}`;
-          evaluateBatteryAndServerState();
-        };
-        updateBat();
-        bat.addEventListener('levelchange', updateBat);
-        bat.addEventListener('chargingchange', updateBat);
-      });
-    } else {
-      document.getElementById('currentBatteryText').innerText = 'AC / Optimal';
-    }
-
-    function evaluateBatteryAndServerState() {
-      const notice = document.getElementById('batteryPauseNotice');
-      if (!isCharging && currentBatteryPct <= batteryThreshold) {
-        if (!isPausedByBattery) {
-          isPausedByBattery = true;
-          setServerVisualState('Inactive');
-          if (peer) { peer.destroy(); peer = null; }
-        }
-        notice.style.display = 'block';
-        notice.innerText = `⚠️ بیٹری ${currentBatteryPct}% ہے (حد: ${batteryThreshold}%) — بیٹری بچانے کے لیے سرور عارضی طور پر موقوف (Inactive) ہے۔`;
-      } else {
-        if (isPausedByBattery) {
-          isPausedByBattery = false;
-          notice.style.display = 'none';
-          ensureNetworkRunning();
-        }
-      }
-    }
-
-    // =========================================================
-    // 4. IndexedDB ملٹی-ایپ آئسولیٹڈ ڈیٹا اسٹور (1GB-10GB پالیسی)
-    // =========================================================
-    let db = null;
-    const appDataStore = new Map(); // namespace -> Map(key -> record)
-
-    function initDatabase() {
-      return new Promise((resolve) => {
-        const req = indexedDB.open('OnNexaServerVault_v1', 1);
-        req.onupgradeneeded = (e) => {
-          const d = e.target.result;
-          if (!d.objectStoreNames.contains('records')) {
-            d.createObjectStore('records', { keyPath: 'uid' });
-          }
-        };
-        req.onsuccess = (e) => {
-          db = e.target.result;
-          const tx = db.transaction('records', 'readonly');
-          tx.objectStore('records').getAll().onsuccess = (ev) => {
-            (ev.target.result || []).forEach(rec => {
-              if (!appDataStore.has(rec.namespace)) appDataStore.set(rec.namespace, new Map());
-              appDataStore.get(rec.namespace).set(rec.key, rec);
-            });
-            resolve();
-          };
-        };
-        req.onerror = () => resolve();
-      });
-    }
-
-    function saveRecordToVault(namespace, record) {
-      // چیک کریں کہ آیا اس سرور کو یہ ایپ تفویض (Link) کی گئی ہے
-      const slug = namespace.replace('alqaem-cluster-', '');
-      if (!myLinkedApps.includes(slug) && !myLinkedApps.includes(namespace)) return false;
-
-      if (!appDataStore.has(namespace)) appDataStore.set(namespace, new Map());
-      const existing = appDataStore.get(namespace).get(record.key);
-      if (existing && existing.ts >= record.ts) return false;
-
-      const fullRec = { uid: `${namespace}::${record.key}`, namespace, ...record };
-      appDataStore.get(namespace).set(record.key, fullRec);
-
-      if (db) {
-        const tx = db.transaction('records', 'readwrite');
-        tx.objectStore('records').put(fullRec);
-      }
-      return true;
-    }
-
-    // =========================================================
-    // 5. خودکار P2P Mesh نیٹ ورک (Always-On Auto-Heal)
-    // =========================================================
-    const PEER_CONFIG = {
-      config: {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' }
-        ]
-      }
-    };
-
-    let peer = null;
-    let dirPeer = null;
-    let serverState = 'Disconnected'; // 'Active' | 'Inactive' | 'Disconnected'
-    const connections = new Map();
-    const connectingAt = new Map();
-    const lastPingRtt = new Map();
-
-    function setServerVisualState(newState) {
-      if (serverState !== newState) {
-        if (newState === 'Active') {
-          onlineCount++;
-          localStorage.setItem('nexa_online_count', onlineCount.toString());
-        } else if (serverState === 'Active' && newState !== 'Active') {
-          offlineCount++;
-          localStorage.setItem('nexa_offline_count', offlineCount.toString());
-        }
-        serverState = newState;
-      }
-
-      const badge = document.getElementById('homeStatusBadge');
-      const dot = document.getElementById('headerDot');
-      const shortTxt = document.getElementById('headerStateShort');
-
-      badge.innerText = serverState;
-      shortTxt.innerText = serverState.toUpperCase();
-      badge.className = 'status-badge ' + (
-        serverState === 'Active' ? 'st-active' :
-        serverState === 'Inactive' ? 'st-inactive' : 'st-disconnected'
-      );
-      dot.className = 'dot ' + serverState.toLowerCase();
-      refreshHomeMetricsUI();
-    }
-
-    function ensureNetworkRunning() {
-      if (isPausedByBattery) return;
-      if (!navigator.onLine) {
-        setServerVisualState('Disconnected');
-        return;
-      }
-      if (!peer || peer.destroyed) {
-        startPrimaryServerNode();
-      }
-      if (!dirPeer || dirPeer.destroyed) {
-        tryClaimDirectoryHub();
-      }
-    }
-
-    function startPrimaryServerNode() {
-      peer = new Peer(MY_NODE_ID, PEER_CONFIG);
-
-      peer.on('open', () => {
-        setServerVisualState('Active');
-        updateLocalNodeRegistry();
-        discoverAndConnectPeers();
-      });
-
-      peer.on('connection', (conn) => bindPeerConnection(conn));
-
-      peer.on('disconnected', () => {
-        setServerVisualState('Disconnected');
-        try { peer.reconnect(); } catch (e) {}
-      });
-
-      peer.on('error', (err) => {
-        if (err.type !== 'peer-unavailable') {
-          setServerVisualState('Disconnected');
-          setTimeout(() => { if (peer) peer.destroy(); peer = null; ensureNetworkRunning(); }, 4000);
-        }
-      });
-    }
-
-    // مشترکہ ڈائریکٹری ہب تاکہ تمام سرورز اور کلائنٹس خودکار ایک دوسرے کو تلاش کر سکیں
-    function tryClaimDirectoryHub() {
-      dirPeer = new Peer(MASTER_DIRECTORY_ID, PEER_CONFIG);
-      dirPeer.on('open', () => {
-        dirPeer.on('connection', (c) => bindPeerConnection(c));
-      });
-      dirPeer.on('error', () => {
-        // کوئی اور نوڈ پہلے سے ڈائریکٹری ہب ہے، اس سے جڑیں
-        if (dirPeer) { dirPeer.destroy(); dirPeer = null; }
-      });
-    }
-
-    function discoverAndConnectPeers() {
-      if (!peer || !peer.open || isPausedByBattery) return;
-      const targets = new Set([MASTER_DIRECTORY_ID, ...Object.keys(nodeRegistry)]);
-      const now = Date.now();
-
-      targets.forEach(targetId => {
-        if (targetId === MY_NODE_ID) return;
-        const ex = connections.get(targetId);
-        if (ex && ex.open) return;
-        if (now - (connectingAt.get(targetId) || 0) < 12000) return;
-
-        connectingAt.set(targetId, now);
-        const conn = peer.connect(targetId, { reliable: true });
-        if (conn) bindPeerConnection(conn);
-      });
-    }
-
-    function sendPacket(conn, obj) {
-      if (!conn || !conn.open) return;
-      const str = JSON.stringify(obj);
-      bytesSent += str.length;
-      localStorage.setItem('nexa_bytes_tx', bytesSent.toString());
-      conn.send(obj);
-    }
-
-    function bindPeerConnection(conn) {
-      conn.on('open', () => {
-        connections.set(conn.peer, conn);
-        connectingAt.delete(conn.peer);
-        sendPacket(conn, {
-          type: 'NEXA_HELLO',
-          nodeMeta: getMyNodeMeta(),
-          directory: nodeRegistry,
-          pingTs: Date.now()
-        });
-        syncAllNamespacesWithPeer(conn);
-        refreshHomeMetricsUI();
-      });
-
-      conn.on('data', (msg) => {
-        if (!msg || !msg.type) return;
-        bytesReceived += JSON.stringify(msg).length;
-        localStorage.setItem('nexa_bytes_rx', bytesReceived.toString());
-
-        // 1. ہیلو اور ڈائریکٹری تبادلہ
-        if (msg.type === 'NEXA_HELLO') {
-          if (msg.nodeMeta && msg.nodeMeta.nodeId) {
-            nodeRegistry[msg.nodeMeta.nodeId] = { ...msg.nodeMeta, online: true, lastSeen: Date.now() };
-          }
-          if (msg.directory) {
-            Object.entries(msg.directory).forEach(([nid, meta]) => {
-              if (!nodeRegistry[nid] || (meta.lastSeen || 0) > (nodeRegistry[nid].lastSeen || 0)) {
-                nodeRegistry[nid] = meta;
-              }
-            });
-          }
-          localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-          if (msg.pingTs) {
-            sendPacket(conn, { type: 'NEXA_PONG', pingTs: msg.pingTs, nodeMeta: getMyNodeMeta() });
-          }
-          discoverAndConnectPeers();
-          if (isAdmin) renderAdminServerLists();
-          return;
-        }
-
-        if (msg.type === 'NEXA_PONG') {
-          if (msg.pingTs) lastPingRtt.set(conn.peer, Date.now() - msg.pingTs);
-          if (msg.nodeMeta && msg.nodeMeta.nodeId) {
-            nodeRegistry[msg.nodeMeta.nodeId] = { ...msg.nodeMeta, online: true, lastSeen: Date.now(), rtt: lastPingRtt.get(conn.peer) || 40 };
-            localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-          }
-          if (isAdmin) renderAdminServerLists();
-          return;
-        }
-
-        // 2. ایڈمن ریموٹ کمانڈ (کسی سرور کا نام یا منسلک ایپس تبدیل کرنا)
-        if (msg.type === 'ADMIN_UPDATE_NODE' && msg.targetNodeId === MY_NODE_ID) {
-          if (msg.newName) {
-            userName = msg.newName;
-            localStorage.setItem('nexa_user_name', userName);
-            refreshProfileAndAdminUI();
-          }
-          if (Array.isArray(msg.linkedApps)) {
-            myLinkedApps = msg.linkedApps;
-            localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
-          }
-          broadcastNodeHeartbeat();
-          return;
-        }
-
-        // 3. کلائنٹ ایپ (Cloudflare PWA / APK) سے ڈیٹا وصول کرنا اور محفوظ کرنا
-        if (msg.type === 'APP_DATA_PUSH' && msg.namespace && msg.record) {
-          const saved = saveRecordToVault(msg.namespace, msg.record);
-          // کلائنٹ کو فوری تصدیقی رسید (ACK) بھیجیں
-          sendPacket(conn, { type: 'APP_DATA_ACK', namespace: msg.namespace, key: msg.record.key, serverId: MY_NODE_ID });
-          if (saved) {
-            // باقی سرورز اور منسلک کلائنٹس کو خودکار منتقل کریں
-            connections.forEach((c, pid) => {
-              if (pid !== conn.peer && c && c.open) sendPacket(c, msg);
-            });
-          }
-          refreshHomeMetricsUI();
-          return;
-        }
-
-        if (msg.type === 'APP_SYNC_REQ' && msg.namespace) {
-          const nsMap = appDataStore.get(msg.namespace);
-          if (nsMap) {
-            const clientKeys = new Set(msg.keys || []);
-            nsMap.forEach((rec, k) => {
-              if (!clientKeys.has(k)) {
-                sendPacket(conn, { type: 'APP_DATA_PUSH', namespace: msg.namespace, record: rec });
-              }
-            });
-          }
-          return;
-        }
-      });
-
-      conn.on('close', () => {
-        if (nodeRegistry[conn.peer]) {
-          nodeRegistry[conn.peer].online = false;
-          localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-        }
-        connections.delete(conn.peer);
-        connectingAt.delete(conn.peer);
-        refreshHomeMetricsUI();
-        if (isAdmin) renderAdminServerLists();
-      });
-    }
-
-    function syncAllNamespacesWithPeer(conn) {
-      appDataStore.forEach((nsMap, ns) => {
-        nsMap.forEach((rec) => {
-          sendPacket(conn, { type: 'APP_DATA_PUSH', namespace: ns, record: rec });
-        });
-      });
-    }
-
-    function getMyNodeMeta() {
-      return {
-        nodeId: MY_NODE_ID,
-        name: userName,
-        firstOnline: firstOnlineTs,
-        totalOnlineSec: totalOnlineSeconds,
-        bytesRx: bytesReceived,
-        linkedApps: myLinkedApps,
-        online: serverState === 'Active',
-        lastSeen: Date.now()
-      };
-    }
-
-    function updateLocalNodeRegistry() {
-      nodeRegistry[MY_NODE_ID] = getMyNodeMeta();
-      localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-    }
-
-    function broadcastNodeHeartbeat() {
-      updateLocalNodeRegistry();
-      connections.forEach((conn) => {
-        if (conn && conn.open) {
-          sendPacket(conn, {
-            type: 'NEXA_HELLO',
-            nodeMeta: getMyNodeMeta(),
-            directory: nodeRegistry,
-            pingTs: Date.now()
-          });
-        }
-      });
-    }
-
-    // ہر 1 سیکنڈ بعد آن لائن وقت اپڈیٹ کریں
-    setInterval(() => {
-      if (serverState === 'Active' && navigator.onLine && !isPausedByBattery) {
-        totalOnlineSeconds++;
-        localStorage.setItem('nexa_total_online_sec', totalOnlineSeconds.toString());
-        refreshHomeMetricsUI();
-      }
-    }, 1000);
-
-    // ہر 6 سیکنڈ بعد خودکار کنکشن بحالی اور ہارٹ بیٹ سنک
-    setInterval(() => {
-      ensureNetworkRunning();
-      discoverAndConnectPeers();
-      broadcastNodeHeartbeat();
-    }, 6000);
-
-    window.addEventListener('online', () => ensureNetworkRunning());
-    window.addEventListener('offline', () => setServerVisualState('Disconnected'));
-
-    // =========================================================
-    // 6. ہوم اسکرین میٹرکس فارمیٹنگ
-    // =========================================================
-    function formatDuration(sec) {
-      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
-      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
-      const s = (sec % 60).toString().padStart(2, '0');
-      return `${h}:${m}:${s}`;
-    }
-
-    function formatDataSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-      if (bytes < 1073741824) return (bytes / 1048576).toFixed(2) + ' MB';
-      return (bytes / 1073741824).toFixed(2) + ' GB';
-    }
-
-    function refreshHomeMetricsUI() {
-      document.getElementById('statConnectedApps').innerText = myLinkedApps.length;
-      document.getElementById('statOnlineDuration').innerText = formatDuration(totalOnlineSeconds);
-      document.getElementById('statToggleCount').innerText = `${onlineCount} / ${offlineCount}`;
-      document.getElementById('statDataReceived').innerText = formatDataSize(bytesReceived);
-      document.getElementById('statDataSent').innerText = formatDataSize(bytesSent);
-    }
-
-    // =========================================================
-    // 7. ایڈمن سیٹنگز، سرور لسٹ، انفرادی سیٹنگز اور کلائنٹ SDK جنریٹر
-    // =========================================================
-    function switchAdminSubTab(tab) {
-      document.getElementById('tabBtnOnline').classList.toggle('active', tab === 'online');
-      document.getElementById('tabBtnOffline').classList.toggle('active', tab === 'offline');
-      document.getElementById('tabBtnConsole').classList.toggle('active', tab === 'console');
-
-      document.getElementById('admin-sub-online').style.display = tab === 'online' ? 'block' : 'none';
-      document.getElementById('admin-sub-offline').style.display = tab === 'offline' ? 'block' : 'none';
-      document.getElementById('admin-sub-console').style.display = tab === 'console' ? 'block' : 'none';
-    }
-
-    function getSignalBars(rtt) {
-      if (!rtt || rtt < 120) return '📶 100% (Excellent)';
-      if (rtt < 300) return '📶 75% (Good)';
-      return '📶 50% (Fair)';
-    }
-
-    function renderAdminServerLists() {
-      updateLocalNodeRegistry();
-      const onlineBox = document.getElementById('onlineServersContainer');
-      const offlineBox = document.getElementById('offlineServersContainer');
-      onlineBox.innerHTML = '';
-      offlineBox.innerHTML = '';
-
-      const allNodes = Object.values(nodeRegistry);
-      const onlineNodes = allNodes.filter(n => n.nodeId === MY_NODE_ID ? serverState === 'Active' : (connections.has(n.nodeId) && connections.get(n.nodeId).open));
-      const offlineNodes = allNodes.filter(n => !onlineNodes.some(o => o.nodeId === n.nodeId));
-
-      if (onlineNodes.length === 0) {
-        onlineBox.innerHTML = '<div class="card"><p style="font-size:13px; color:#64748b;">اس وقت کوئی آن لائن سرور موجود نہیں۔</p></div>';
-      } else {
-        onlineNodes.forEach(node => onlineBox.appendChild(createServerStripElement(node, true)));
-      }
-
-      if (offlineNodes.length === 0) {
-        offlineBox.innerHTML = '<div class="card"><p style="font-size:13px; color:#64748b;">کوئی آف لائن سرور نہیں ہے۔</p></div>';
-      } else {
-        offlineNodes.forEach(node => offlineBox.appendChild(createServerStripElement(node, false)));
-      }
-    }
-
-    function createServerStripElement(node, isOnline) {
-      const strip = document.createElement('div');
-      strip.className = 'server-strip';
-      const firstDate = new Date(node.firstOnline || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const signalTxt = isOnline ? getSignalBars(node.rtt) : '📵 Offline';
-
-      strip.innerHTML = `
-        <div class="strip-info">
-          <div class="strip-name">
-            <span style="color:${isOnline ? '#16a34a' : '#dc2626'};">●</span>
-            <span>${escapeHtml(node.name || node.nodeId)}</span>
-          </div>
-          <div class="strip-meta-grid">
-            <span class="strip-pill">پہلی بار آن لائن: ${firstDate}</span>
-            <span class="strip-pill">کل دورانیہ: ${formatDuration(node.totalOnlineSec || 0)}</span>
-            <span class="strip-pill">موصول ڈیٹا: ${formatDataSize(node.bytesRx || 0)}</span>
-            <span class="strip-pill">${signalTxt}</span>
-          </div>
-        </div>
-        <button class="strip-gear-btn" title="سرور سیٹنگز" onclick="openNodeDetailSettings('${node.nodeId}')">⚙️</button>
-      `;
-      return strip;
-    }
-
-    let editingNodeId = null;
-
-    function openNodeDetailSettings(nodeId) {
-      editingNodeId = nodeId;
-      const node = nodeRegistry[nodeId] || { nodeId, name: nodeId, linkedApps: [] };
-      document.getElementById('editNodeNameInput').value = node.name || '';
-
-      const tickList = document.getElementById('nodeAppTickList');
-      tickList.innerHTML = '';
-      const assigned = new Set(node.linkedApps || []);
-
-      registeredApps.forEach(app => {
-        const row = document.createElement('label');
-        row.className = 'app-check-row';
-        row.innerHTML = `
-          <span>${escapeHtml(app.title)}</span>
-          <input type="checkbox" value="${app.slug}" ${assigned.has(app.slug) ? 'checked' : ''}>
-        `;
-        tickList.appendChild(row);
-      });
-
-      switchView('node-detail');
-    }
-
-    function saveNodeCustomName() {
-      if (!editingNodeId) return;
-      const newName = document.getElementById('editNodeNameInput').value.trim();
-      if (!newName) return;
-
-      if (editingNodeId === MY_NODE_ID) {
-        userName = newName;
-        localStorage.setItem('nexa_user_name', userName);
-        refreshProfileAndAdminUI();
-      } else {
-        const conn = connections.get(editingNodeId);
-        if (conn && conn.open) sendPacket(conn, { type: 'ADMIN_UPDATE_NODE', targetNodeId: editingNodeId, newName });
-      }
-      if (nodeRegistry[editingNodeId]) {
-        nodeRegistry[editingNodeId].name = newName;
-        localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-      }
-      alert("سرور کا نام اپڈیٹ کر دیا گیا ہے۔");
-    }
-
-    function saveNodeLinkedApps() {
-      if (!editingNodeId) return;
-      const checked = Array.from(document.querySelectorAll('#nodeAppTickList input[type="checkbox"]:checked')).map(cb => cb.value);
-
-      if (editingNodeId === MY_NODE_ID) {
-        myLinkedApps = checked;
-        localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
-        refreshHomeMetricsUI();
-      } else {
-        const conn = connections.get(editingNodeId);
-        if (conn && conn.open) sendPacket(conn, { type: 'ADMIN_UPDATE_NODE', targetNodeId: editingNodeId, linkedApps: checked });
-      }
-      if (nodeRegistry[editingNodeId]) {
-        nodeRegistry[editingNodeId].linkedApps = checked;
-        localStorage.setItem('nexa_node_registry', JSON.stringify(nodeRegistry));
-      }
-      alert("منسلک ایپلیکیشنز محفوظ کر دی گئیں۔");
-    }
-
-    // سرور کنسول: نئی ایپ شامل کرنا اور کلائنٹ JS فائل بنانا
-    function createNewConsoleApp() {
-      const title = document.getElementById('newConsoleAppName').value.trim();
-      const slug = document.getElementById('newConsoleAppSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
-      if (!title || !slug) {
-        alert("ایپلیکیشن کا نام اور انگریزی کوڈ آئی ڈی دونوں درج کریں۔");
-        return;
-      }
-      if (registeredApps.some(a => a.slug === slug)) {
-        alert("یہ ایپ کوڈ پہلے سے موجود ہے۔");
-        return;
-      }
-      registeredApps.push({ title, slug });
-      localStorage.setItem('nexa_registered_apps', JSON.stringify(registeredApps));
-      myLinkedApps.push(slug);
-      localStorage.setItem('nexa_my_linked_apps', JSON.stringify(myLinkedApps));
-
-      document.getElementById('newConsoleAppName').value = '';
-      document.getElementById('newConsoleAppSlug').value = '';
-      renderConsoleApps();
-      refreshHomeMetricsUI();
-    }
-
-    function renderConsoleApps() {
-      const box = document.getElementById('consoleAppsList');
-      box.innerHTML = '';
-      registeredApps.forEach(app => {
-        const ns = `alqaem-cluster-${app.slug}`;
-        const connUrl = `${window.location.origin}${window.location.pathname}?app=${ns}`;
-        const el = document.createElement('div');
-        el.className = 'console-app-box';
-        el.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <strong style="font-size:14px; color:#1e1b4b;">📱 ${escapeHtml(app.title)}</strong>
-            <span class="ns-badge">${ns}</span>
-          </div>
-          <div class="link-box">${connUrl}</div>
-          <div class="dual-btn">
-            <button class="btn-sm" style="background:#334155;" onclick="copyText('${connUrl}')">📋 لنک کاپی کریں</button>
-            <button class="btn-sm" style="background:#0891b2;" onclick="downloadAppClientJs('${app.slug}', '${escapeHtml(app.title)}')">⬇️ کلائنٹ فائل (.js)</button>
-          </div>
-        `;
-        box.appendChild(el);
-      });
-    }
-
-    function copyText(txt) {
-      navigator.clipboard.writeText(txt).then(() => alert("کنکشن لنک کاپی ہو گیا:\n" + txt));
-    }
-
-    function downloadAppClientJs(slug, title) {
-      const ns = `alqaem-cluster-${slug}`;
-      const code = `/**
- * ON NEXA SERVER - Client Connector SDK
- * App: ${title}
- * Namespace: ${ns}
- */
-(function() {
-  const NAMESPACE = "${ns}";
-  const DIR_ID = "${MASTER_DIRECTORY_ID}";
-  const CFG = { config: { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }] } };
-
-  let peer = null;
-  const conns = new Map();
-  const servers = new Set([DIR_ID]);
-  const cache = new Map();
-  const callbacks = [];
-
-  function boot() {
-    peer = new Peer(CFG);
-    peer.on("open", () => dialServers());
-    peer.on("connection", (c) => attach(c));
-    peer.on("error", () => setTimeout(boot, 4000));
-    setInterval(dialServers, 6000);
-  }
-
-  function dialServers() {
-    if (!peer || !peer.open) return;
-    servers.forEach(id => {
-      if (id === peer.id) return;
-      const ex = conns.get(id);
-      if (!ex || !ex.open) {
-        const c = peer.connect(id, { reliable: true });
-        if (c) attach(c);
-      }
-    });
-  }
-
-  function attach(conn) {
-    conn.on("open", () => {
-      conns.set(conn.peer, conn);
-      conn.send({ type: "APP_SYNC_REQ", namespace: NAMESPACE, keys: Array.from(cache.keys()) });
-    });
-    conn.on("data", (d) => {
-      if (!d) return;
-      if (d.type === "NEXA_HELLO" && d.directory) {
-        Object.keys(d.directory).forEach(s => servers.add(s));
-        dialServers();
-      }
-      if (d.type === "APP_DATA_PUSH" && d.namespace === NAMESPACE && d.record) {
-        cache.set(d.record.key, d.record);
-        callbacks.forEach(fn => fn(d.record));
-      }
-    });
-    conn.on("close", () => conns.delete(conn.peer));
-  }
-
-  window.OnNexaClient = {
-    namespace: NAMESPACE,
-    save: function(key, value) {
-      const record = { key, value, ts: Date.now() };
-      cache.set(key, record);
-      conns.forEach(c => { if (c && c.open) c.send({ type: "APP_DATA_PUSH", namespace: NAMESPACE, record }); });
-    },
-    get: function(key) { return cache.has(key) ? cache.get(key).value : null; },
-    getAll: function() { const o = {}; cache.forEach((v, k) => o[k] = v.value); return o; },
-    onData: function(fn) { if (typeof fn === "function") callbacks.push(fn); }
-  };
-
-  boot();
-})();`;
-
-      const blob = new Blob([code], { type: 'application/javascript' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${slug}-nexa-client.js`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
-    }
-
-    // ایپ شروع کریں
-    initDatabase().then(() => {
-      refreshHomeMetricsUI();
-      ensureNetworkRunning();
-    });
-  </script>
-</body>
-</html>
+          document.get
