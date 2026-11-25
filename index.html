@@ -1,81 +1,323 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1a73e8">
   <title>ALQAEM</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 12px; max-width: 500px; margin: auto; background: #f0f2f5; }
-    .box { background: #fff; padding: 14px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-    input, button { width: 100%; box-sizing: border-box; padding: 12px; margin: 5px 0; border-radius: 8px; font-size: 16px; }
-    input { border: 1px solid #ccc; }
-    button { background: #1a73e8; color: #fff; border: none; font-weight: bold; cursor: pointer; }
-    button.inst { background: #ff6d00; display: none; }
-    #chat { height: 55vh; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 8px; }
-    .msg-me { background: #e8f0fe; color: #174ea6; padding: 8px 12px; border-radius: 10px; margin: 6px 0; text-align: left; }
-    .msg-them { background: #fff; border: 1px solid #ddd; color: #111; padding: 8px 12px; border-radius: 10px; margin: 6px 0; text-align: right; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #e5ddd5;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: auto;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+
+    /* اوپر والا ہیڈر: گول تصویر اور Name */
+    header {
+      background: #1a73e8;
+      color: #fff;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      color: #1a73e8;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #bbdefb;
+    }
+    .header-info { flex: 1; }
+    .header-name { font-size: 17px; font-weight: bold; }
+    .header-status { font-size: 12px; color: #e8f0fe; margin-top: 2px; }
+
+    /* مرکزی اسکرینز */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .tab-page { display: none; flex: 1; flex-direction: column; }
+    .tab-page.active { display: flex; }
+
+    /* چیٹ ببلز (تصویر کے مطابق دائیں بائیں) */
+    #chatList {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+    .bubble {
+      max-width: 76%;
+      padding: 9px 13px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .bubble.them {
+      align-self: flex-start;
+      background: #ffffff;
+      color: #111;
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.me {
+      align-self: flex-end;
+      background: #dcf8c6;
+      color: #111;
+      border-bottom-right-radius: 4px;
+    }
+    .sender-tag {
+      font-size: 11px;
+      font-weight: bold;
+      color: #1a73e8;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    /* دیگر ٹیبز کے کارڈز */
+    .card {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      direction: rtl;
+    }
+    .card h4 { margin-bottom: 8px; color: #1a73e8; }
+    .card input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .card button {
+      width: 100%;
+      padding: 10px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    /* Type بار */
+    .type-bar {
+      background: #f0f2f5;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid #ddd;
+    }
+    .type-bar input {
+      flex: 1;
+      padding: 11px 15px;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* نیچے 4 آئیکنز والا فوٹر */
+    footer {
+      background: #ffffff;
+      border-top: 1px solid #d0d7de;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: 56px;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      border-right: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #5f6368;
+      transition: 0.2s;
+    }
+    .nav-btn:last-child { border-right: none; }
+    .nav-btn.active { color: #1a73e8; background: #f1f6fe; }
+    .nav-btn svg { width: 24px; height: 24px; fill: currentColor; }
   </style>
 </head>
 <body>
 
-  <div class="box" style="text-align:center;">
-    <h3 style="margin:0 0 4px 0;">ALQAEM</h3>
-    <div id="status" style="font-weight:bold; color:#e37400;">نیٹ ورک سے جڑ رہا ہے...</div>
-    <button id="installBtn" class="inst">📲 موبائل میں ALQAEM انسٹال کریں</button>
+  <!-- ہیڈر: گول تصویر + Name -->
+  <header>
+    <div class="avatar" id="avatarLetter">A</div>
+    <div class="header-info">
+      <div class="header-name" id="headerName">ALQAEM</div>
+      <div class="header-status" id="status">نیٹ ورک سے جڑ رہا ہے...</div>
+    </div>
+  </header>
+
+  <!-- مرکزی حصہ -->
+  <main>
+    <!-- ٹیب 1: میسجز (چیٹ) -->
+    <section id="tab-chat" class="tab-page active">
+      <div id="chatList"></div>
+    </section>
+
+    <!-- ٹیب 2: ہوم (نیٹ ورک اسٹیٹس) -->
+    <section id="tab-home" class="tab-page">
+      <div class="card">
+        <h4>ALQAEM لائیو نیٹ ورک</h4>
+        <p id="netDetail">خودکار P2P سسٹم فعال ہے۔ کسی کوڈ یا دستی سیٹ اپ کی ضرورت نہیں۔</p>
+      </div>
+      <div class="card">
+        <h4>ایپ انسٹال کریں</h4>
+        <p style="font-size:14px; color:#555; margin-bottom:8px;">ہوم اسکرین پر ایپ شامل کرنے کے لیے براؤزر کے مینو (⋮) سے Install app منتخب کریں۔</p>
+      </div>
+    </section>
+
+    <!-- ٹیب 3: سیٹنگز -->
+    <section id="tab-settings" class="tab-page">
+      <div class="card">
+        <h4>چیٹ صاف کریں</h4>
+        <p style="font-size:14px; color:#555; margin-bottom:8px;">اسکرین سے تمام پرانے پیغامات ہٹائیں۔</p>
+        <button style="background:#d93025;" onclick="clearChat()">چیٹ صاف کریں</button>
+      </div>
+    </section>
+
+    <!-- ٹیب 4: پروفائل -->
+    <section id="tab-profile" class="tab-page">
+      <div class="card">
+        <h4>میرا نام (Profile Name)</h4>
+        <p style="font-size:14px; color:#555;">یہ نام ہیڈر اور آپ کے پیغامات کے ساتھ نظر آئے گا:</p>
+        <input type="text" id="profileInput" placeholder="اپنا نام لکھیں (مثلاً: Director)">
+        <button onclick="saveProfile()">نام محفوظ کریں</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Type بار -->
+  <div class="type-bar" id="typeBar">
+    <input type="text" id="msgInput" placeholder="Type..." onkeypress="if(event.key==='Enter') sendMsg()">
+    <button class="send-btn" onclick="sendMsg()">➤</button>
   </div>
 
-  <div class="box">
-    <div id="chat"></div>
-    <input type="text" id="msgInput" placeholder="پیغام لکھیں..." onkeypress="if(event.key==='Enter') sendMsg()">
-    <button onclick="sendMsg()">بھیجیں</button>
-  </div>
+  <!-- فوٹر: 4 آئیکنز (لفافہ، گھر، سیٹنگز، پروفائل) -->
+  <footer>
+    <button class="nav-btn active" onclick="switchTab('chat', this)" title="Messages">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    </button>
+    <button class="nav-btn" onclick="switchTab('home', this)" title="Home">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </button>
+    <button class="nav-btn" onclick="switchTab('settings', this)" title="Settings">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </button>
+    <button class="nav-btn" onclick="switchTab('profile', this)" title="Profile">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </button>
+  </footer>
 
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
     }
 
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'block';
-    });
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        installBtn.style.display = 'none';
-      }
-    });
+    // پروفائل نام لوڈ کریں
+    let myName = localStorage.getItem('alqaem_profile_name') || 'ALQAEM';
+    document.getElementById('headerName').innerText = myName;
+    document.getElementById('avatarLetter').innerText = myName.charAt(0).toUpperCase();
+    document.getElementById('profileInput').value = myName === 'ALQAEM' ? '' : myName;
 
-    // ALQAEM مشترکہ نیٹ ورک کی مستقل ID
+    function saveProfile() {
+      const val = document.getElementById('profileInput').value.trim() || 'ALQAEM';
+      myName = val;
+      localStorage.setItem('alqaem_profile_name', val);
+      document.getElementById('headerName').innerText = val;
+      document.getElementById('avatarLetter').innerText = val.charAt(0).toUpperCase();
+      switchTab('chat', document.querySelector('.nav-btn'));
+    }
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      btn.classList.add('active');
+      document.getElementById('typeBar').style.display = (tab === 'chat') ? 'flex' : 'none';
+    }
+
+    function clearChat() {
+      document.getElementById('chatList').innerHTML = '';
+      switchTab('chat', document.querySelector('.nav-btn'));
+    }
+
+    // خودکار P2P Mesh نیٹ ورک
     const HUB_ID = 'alqaem-rattowal-global-hub-v1';
+    const PEER_CONFIG = {
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      }
+    };
+
     let peer = null;
     let isHub = false;
     let connections = [];
     const seenMsgs = new Set();
 
     const statusEl = document.getElementById('status');
-    const chatEl = document.getElementById('chat');
+    const netDetailEl = document.getElementById('netDetail');
+    const chatList = document.getElementById('chatList');
 
     function updateStatus() {
       const count = connections.filter(c => c && c.open).length;
       if (isHub) {
-        statusEl.innerText = count > 0
-          ? `مرکزی نوڈ فعال | ${count} موبائل جڑے ہوئے ہیں`
-          : `تیار ہے (باقی موبائلز کا انتظار...)`;
-        statusEl.style.color = count > 0 ? "#188038" : "#e37400";
+        statusEl.innerText = count > 0 ? `آن لائن (${count} جڑے ہوئے)` : `آن لائن (انتظار...)`;
+        netDetailEl.innerText = `یہ ڈیوائس مرکزی نوڈ (Hub) ہے۔ جڑے ہوئے موبائلز: ${count}`;
       } else {
-        statusEl.innerText = count > 0
-          ? `ALQAEM نیٹ ورک سے جڑ گیا!`
-          : `مرکز سے رابطہ ہو رہا ہے...`;
-        statusEl.style.color = count > 0 ? "#188038" : "#d93025";
+        statusEl.innerText = count > 0 ? `نیٹ ورک سے جڑ گیا` : `رابطہ ہو رہا ہے...`;
+        netDetailEl.innerText = count > 0 ? `ALQAEM نیٹ ورک سے کامیابی سے جڑا ہوا ہے۔` : `مرکزی نوڈ تلاش کیا جا رہا ہے...`;
       }
     }
 
@@ -83,42 +325,28 @@
       if (peer) peer.destroy();
       connections = [];
       isHub = false;
+      peer = new Peer(HUB_ID, PEER_CONFIG);
 
-      // پہلے مرکزی نوڈ بننے کی کوشش کریں
-      peer = new Peer(HUB_ID);
-
-      peer.on('open', () => {
-        isHub = true;
-        updateStatus();
-      });
-
-      peer.on('connection', (conn) => {
-        registerConn(conn);
-      });
-
+      peer.on('open', () => { isHub = true; updateStatus(); });
+      peer.on('connection', (conn) => registerConn(conn));
       peer.on('error', (err) => {
-        if (err.type === 'unavailable-id') {
-          // مرکز پہلے سے موجود ہے، بطور ممبر جڑیں
-          joinAsMember();
-        } else {
-          setTimeout(startNetwork, 3000);
-        }
+        if (err.type === 'unavailable-id') joinAsMember();
+        else setTimeout(startNetwork, 3000);
       });
     }
 
     function joinAsMember() {
       if (peer) peer.destroy();
       isHub = false;
-      peer = new Peer(); // خودکار منفرد ID
+      peer = new Peer(PEER_CONFIG);
+      peer.on('open', () => connectToHub());
+      peer.on('error', () => setTimeout(startNetwork, 3000));
+    }
 
-      peer.on('open', () => {
-        const conn = peer.connect(HUB_ID, { reliable: true });
-        registerConn(conn);
-      });
-
-      peer.on('error', () => {
-        setTimeout(startNetwork, 3000);
-      });
+    function connectToHub() {
+      if (isHub || !peer || !peer.open) return;
+      if (connections.some(c => c && c.open)) return;
+      registerConn(peer.connect(HUB_ID, { reliable: true }));
     }
 
     function registerConn(conn) {
@@ -126,43 +354,39 @@
         if (!connections.includes(conn)) connections.push(conn);
         updateStatus();
       });
-
       conn.on('data', (packet) => {
         if (!packet || !packet.id || seenMsgs.has(packet.id)) return;
         seenMsgs.add(packet.id);
-
-        appendMsg(packet.text, false);
-
-        // اگر یہ مرکزی نوڈ ہے تو پیغام باقی تمام جڑے ہوئے موبائلز کو بھیج دے
-        if (isHub) {
-          broadcast(packet, conn);
-        }
+        appendBubble(packet.text, false, packet.sender);
+        if (isHub) broadcast(packet, conn);
       });
-
       conn.on('close', () => {
         connections = connections.filter(c => c !== conn);
         updateStatus();
-        // اگر ممبر تھا اور مرکز بند ہو گیا تو خود نیا مرکز بننے کی کوشش کرے
-        if (!isHub) {
-          setTimeout(startNetwork, 1500);
-        }
+        if (!isHub) setTimeout(startNetwork, 1500);
       });
     }
 
     function broadcast(packet, excludeConn = null) {
       connections.forEach(c => {
-        if (c && c.open && c !== excludeConn) {
-          c.send(packet);
-        }
+        if (c && c.open && c !== excludeConn) c.send(packet);
       });
     }
 
-    function appendMsg(text, isMe) {
+    function appendBubble(text, isMe, sender) {
       const div = document.createElement('div');
-      div.className = isMe ? 'msg-me' : 'msg-them';
-      div.innerText = text;
-      chatEl.appendChild(div);
-      chatEl.scrollTop = chatEl.scrollHeight;
+      div.className = 'bubble ' + (isMe ? 'me' : 'them');
+      if (!isMe && sender && sender !== 'ALQAEM') {
+        const tag = document.createElement('span');
+        tag.className = 'sender-tag';
+        tag.innerText = sender;
+        div.appendChild(tag);
+      }
+      const txt = document.createElement('span');
+      txt.innerText = text;
+      div.appendChild(txt);
+      chatList.appendChild(div);
+      chatList.scrollTop = chatList.scrollHeight;
     }
 
     function sendMsg() {
@@ -178,14 +402,16 @@
 
       const packet = {
         id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
-        text: text
+        text: text,
+        sender: myName
       };
       seenMsgs.add(packet.id);
-      appendMsg(text, true);
+      appendBubble(text, true, myName);
       broadcast(packet);
       inp.value = "";
     }
 
+    setInterval(() => { if (!isHub) connectToHub(); }, 4000);
     startNetwork();
   </script>
 </body>
